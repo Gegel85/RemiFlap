@@ -1,0 +1,3 @@
+checkstack
+cbreak pc >= $8000 && pc < $FF80
+continue
