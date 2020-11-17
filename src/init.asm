@@ -46,7 +46,7 @@ init::
         call copyMemory
 
 	pop de
-	ld sp, $E000
+	ld sp, $D000
 	push de
 
 	ei

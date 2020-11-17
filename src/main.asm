@@ -68,13 +68,13 @@ game::
 	call waitVBLANK
 	reset lcdCtrl
 
-	reg vramBankSelect, 1
+	reg VRAMBankSelect, 1
 	ld hl, background
 	ld bc, $1000
 	ld de, vramStart
 	call copyMemory
 
-	reset vramBankSelect
+	reset VRAMBankSelect
 	ld bc, backgroundMap - background - $1000
 	ld de, vramStart
 	call copyMemory
@@ -113,10 +113,6 @@ game::
 
 	call copyBgTilemap
 
-	ld hl, vramBgStart + $10
-	ld c, 8
-	call drawFireColumn
-
 	reg lcdCtrl, %10010011
 initGame::
 	reg playerPos, $55
@@ -130,9 +126,43 @@ initGame::
 	ld b, 1
 	push bc
 
+	halt
+
+	ld hl, vramBgMirror + $10
+	ld c, 8
+	call drawFireColumn
 gameLoop::
 	reset interruptFlag
 	halt
+
+.copyBuffer::
+	reset WRAMBankSelect
+	ld [VRAMBankSelect], a
+	ld hl, newDmaSrcH
+	ld [hl], vramBgMirror >> 8
+	inc l
+	ld [hl], vramBgMirror & $FF
+	inc l
+	ld [hl], vramBgStart >> 8
+	inc l
+	ld [hl], vramBgStart & $FF
+	inc l
+	ld [hl], $24
+	reg WRAMBankSelect, 3
+	ld [VRAMBankSelect], a
+	ld hl, newDmaSrcH
+	ld [hl], vramBgMirror >> 8
+	inc l
+	ld [hl], vramBgMirror & $FF
+	inc l
+	ld [hl], vramBgStart >> 8
+	inc l
+	ld [hl], vramBgStart & $FF
+	inc l
+	ld [hl], $24
+	reset WRAMBankSelect
+	ld [VRAMBankSelect], a
+
 .updatePlayerSprite::
 	ld hl, oamSrc
 	ld de, 4

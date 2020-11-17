@@ -2,10 +2,10 @@ copyBgTilemap::
 	ld a, 1 << 3
 	ld [$FFFD], a
 	ld [$FFFE], a
-	ld hl, vramBgStart
+	ld hl, vramBgMirror
 	ld de, backgroundMap
 .loop:
-	reset vramBankSelect
+	reset WRAMBankSelect
 	ld a, [de]
 	inc de
 	ld [hl], a
@@ -32,19 +32,20 @@ copyBgTilemap::
 	ld a, 1 << 3
 .writeValue:
 	ld b, a
-	reg vramBankSelect, 1
+	reg WRAMBankSelect, 3
 	ld a, b
 	ld [hli], a
 	bit 2, h
 	jr z, .loop
-	reset vramBankSelect
+	reset WRAMBankSelect
 	ret
 
 drawFireColumn::
 	push hl
 	push bc
-	reg vramBankSelect, 1
+	reg WRAMBankSelect, 3
 	ld de, $20 - 2
+	res 1, a
 .loopBank1::
 	ld [hli], a
 	set 5, a
@@ -58,7 +59,6 @@ drawFireColumn::
 
 	set 6, a
 	ld [hli], a
-	;ld [hli], a
 	set 5, a
 	ld [hli], a
 	and ~(1 << 5) & ~(1 << 6)
@@ -68,13 +68,13 @@ drawFireColumn::
 	add hl, de
 	add hl, de
 	add hl, de
-	ld e, $20 - 2;3
+	ld e, $20 - 2
 	jr .loopBank1
 
 .next::
 	pop bc
 	pop hl
-	reset vramBankSelect
+	reset WRAMBankSelect
 	ld e, $20 - 1
 	ld a, ((backgroundMap - background - $1000) + (fireSprite1 - remiliaSprite)) / $10 + 2
 .loopBank0:

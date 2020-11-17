@@ -26,6 +26,7 @@ vblank_interrupt::
 	ld [hl], a
 	and $1F
 	jr nz, .noAnimChange
+	reset VRAMBankSelect
 	bit 5, [hl]
 	ld hl, newDmaSrcH
 	jr z, .anim2
@@ -45,6 +46,7 @@ vblank_interrupt::
 	inc l
 	ld [hl], ((backgroundMap - background - $1000) + (fireSprite1 - remiliaSprite) + vramStart) & $FF
 	inc l
+	ld b, b
 	ld [hl], $02
 
 .noAnimChange::

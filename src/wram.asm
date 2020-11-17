@@ -39,6 +39,10 @@ playerSpeed::
 fireAnimationCounter::
 	ds $1
 
+SECTION "VRAM_MAP_SRC", WRAMX[$D800]
+vramBgMirror::
+	ds $300
+
 SECTION "OAM", WRAMX[$DE00]
 oamSrc::
 	ds $A0

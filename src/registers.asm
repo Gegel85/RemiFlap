@@ -85,7 +85,7 @@ winPosXMinus7  = $FF4B
 speedSwitch    = $FF4D
 
 ;VRAM Bank select (CGB only)
-vramBankSelect = $FF4F
+VRAMBankSelect = $FF4F
 
 ;New DMA (CGB only)
 newDmaSrcH     = $FF51
