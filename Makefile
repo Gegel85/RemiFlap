@@ -37,6 +37,18 @@ COLORED_IMGS = \
 	assets/remi0d/remilia00.png \
 	assets/remi0d/remilia01.png \
 	assets/remi0d/remilia11.png \
+	assets/remim45d/remi_mouth.png \
+	assets/remim45d/remi_hat.png \
+	assets/remim45d/remi_wing.png \
+	assets/remim45d/remilia.png \
+	assets/remi45d/remi_mouth.png \
+	assets/remi45d/remi_hat.png \
+	assets/remi45d/remi_wing.png \
+	assets/remi45d/remilia.png \
+	assets/remi70d/remi_mouth.png \
+	assets/remi70d/remi_hat.png \
+	assets/remi70d/remi_wing.png \
+	assets/remi70d/remilia.png \
 	assets/background.png \
 	assets/fire1.png \
 	assets/fire2.png \

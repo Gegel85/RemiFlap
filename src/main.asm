@@ -2,6 +2,8 @@ include "src/constants.asm"
 include "src/macro.asm"
 include "src/registers.asm"
 
+GRAVITY_COUNTER = 6
+
 SECTION "Main", ROM0
 
 notCGB::
@@ -80,11 +82,7 @@ game::
 	call copyMemory
 
 	ld hl, remiliaSprite
-	ld bc, $50
-	call copyMemory
-
-	ld hl, fireSprite1
-	ld bc, $30
+	ld bc, $200
 	call copyMemory
 
 	ld hl, cgbBgPalIndex
@@ -113,24 +111,22 @@ game::
 
 	call copyBgTilemap
 
+	ld hl, vramBgMirror + $10
+	ld c, 8
+	call drawFireColumn
+
 	reg lcdCtrl, %10010011
 initGame::
 	reg playerPos, $55
-	reg playerSpeed, -5
+	reset playerSpeed
 
 	ld hl, spriteInitValues
 	ld de, oamSrc
 	ld bc, main - spriteInitValues
 	call copyMemory
 
-	ld b, 1
+	ld b, $30
 	push bc
-
-	halt
-
-	ld hl, vramBgMirror + $10
-	ld c, 8
-	call drawFireColumn
 gameLoop::
 	reset interruptFlag
 	halt
@@ -163,26 +159,11 @@ gameLoop::
 	reset WRAMBankSelect
 	ld [VRAMBankSelect], a
 
-.updatePlayerSprite::
-	ld hl, oamSrc
-	ld de, 4
-	ld a, [playerPos]
-	ld [hl], a
-	add hl, de
-	add 2
-	ld [hl], a
-	add hl, de
-	add 4
-	ld [hl], a
-	add hl, de
-	ld [hl], a
-	add hl, de
-	add 2
-	ld [hl], a
-	add hl, de
 .updateScroll::
 	ld hl, bgScrollX
 	inc [hl]
+
+	call showPlayer
 
 .updatePlayer::
 	ld hl, playerSpeed
@@ -193,7 +174,7 @@ gameLoop::
 	jr nz, .noInc
 
 	pop bc
-	ld b, 6
+	ld b, GRAVITY_COUNTER
 	push bc
 	inc [hl]
 .noInc::
@@ -209,6 +190,9 @@ gameLoop::
 	jr nz, .noJump
 .jump::
 	reg playerSpeed, -2
+	pop bc
+	ld b, GRAVITY_COUNTER
+	push bc
 .noJump::
 	jp gameLoop
 
@@ -219,3 +203,4 @@ include "src/sound/music.asm"
 include "src/sound/sfx.asm"
 include "src/utils.asm"
 include "src/drawer.asm"
+include "src/animation.asm"
