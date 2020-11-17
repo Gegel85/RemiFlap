@@ -38,14 +38,18 @@ playerSpeed::
 	ds $1
 fireAnimationCounter::
 	ds $1
+fireGenerationCounter::
+	ds $1
+
+
+SECTION "OAM", WRAM0[$CE00]
+oamSrc::
+	ds $A0
+
+stackTop::
+	ds $D000 - stackTop
+stackBottom::
 
 SECTION "VRAM_MAP_SRC", WRAMX[$D800]
 vramBgMirror::
 	ds $300
-
-SECTION "OAM", WRAMX[$DE00]
-oamSrc::
-	ds $A0
-
-stackMax::
-	ds $E000 - stackMax

@@ -51,9 +51,9 @@ lockup::
 spriteInitValues::
 	db $55, $20, (backgroundMap - background - $1000) / $10 + 1, $01 ; Top left part of player
 	db $57, $28, (backgroundMap - background - $1000) / $10    , $00 ; Remilia hat
-	db $5B, $28, (backgroundMap - background - $1000) / $10 + 3, $03 ; Bottom right part of player
-	db $5B, $23, (backgroundMap - background - $1000) / $10 + 4, $04 ; Remilia wing
-	db $5D, $20, (backgroundMap - background - $1000) / $10 + 2, $02 ; Bottom left part of player
+	db $5B, $28, (backgroundMap - background - $1000) / $10 + 3, $01 ; Bottom right part of player
+	db $5B, $23, (backgroundMap - background - $1000) / $10 + 4, $02 ; Remilia wing
+	db $5D, $20, (backgroundMap - background - $1000) / $10 + 2, $01 ; Bottom left part of player
 
 ; Main function
 main::

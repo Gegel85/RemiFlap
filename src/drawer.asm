@@ -76,7 +76,7 @@ drawFireColumn::
 	pop hl
 	reset WRAMBankSelect
 	ld e, $20 - 1
-	ld a, ((backgroundMap - background - $1000) + (fireSprite1 - remiliaSprite)) / $10 + 2
+	ld a, ((backgroundMap - background - $1000) + (fireSprite1 - remiliaSprite)) / $10 + 1
 .loopBank0:
 	ld [hli], a
 	ld [hl], a
@@ -86,7 +86,6 @@ drawFireColumn::
 	dec c
 	jr nz, .loopBank0
 
-	dec a
 	dec a
 	ld [hli], a
 	ld [hl], a
@@ -98,7 +97,6 @@ drawFireColumn::
 	add hl, de
 	ld [hli], a
 	ld [hl], a
-	inc a
 	inc a
 	dec e
 	add hl, de

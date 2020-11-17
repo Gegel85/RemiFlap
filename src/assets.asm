@@ -1,11 +1,15 @@
 SECTION "Assets", ROMX[$4000], BANK[1]
 
 remiliaSprite::
-	incbin "assets/remi_hat.cfx"
-	incbin "assets/remilia00.cfx"
-	incbin "assets/remilia01.cfx"
-	incbin "assets/remilia11.cfx"
-	incbin "assets/remi_wing.cfx"
+	incbin "assets/remi0d/remi_hat.cfx"
+	incbin "assets/remi0d/remilia00.cfx"
+	incbin "assets/remi0d/remilia01.cfx"
+	incbin "assets/remi0d/remilia11.cfx"
+	incbin "assets/remi0d/remi_wing.cfx"
+	ds $10
+	ds $10
+	ds $10
+
 
 fireSprite1::
 	incbin "assets/fire1.cfx"
@@ -17,6 +21,7 @@ noCGBScreen::
 noCGBScreenMap::
 	incbin "assets/nocgberror.tilemap"
 
+SECTION "Bg", ROMX[$53B0], BANK[1]
 background::
 	incbin "assets/background.cfx"
 backgroundMap::

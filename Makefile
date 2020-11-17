@@ -32,11 +32,11 @@ IMGS = \
 COMPRESSED_IMGS = \
 
 COLORED_IMGS = \
-	assets/remi_hat.png \
-	assets/remi_wing.png \
-	assets/remilia00.png \
-	assets/remilia01.png \
-	assets/remilia11.png \
+	assets/remi0d/remi_hat.png \
+	assets/remi0d/remi_wing.png \
+	assets/remi0d/remilia00.png \
+	assets/remi0d/remilia01.png \
+	assets/remi0d/remilia11.png \
 	assets/background.png \
 	assets/fire1.png \
 	assets/fire2.png \

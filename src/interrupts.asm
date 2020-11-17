@@ -46,8 +46,7 @@ vblank_interrupt::
 	inc l
 	ld [hl], ((backgroundMap - background - $1000) + (fireSprite1 - remiliaSprite) + vramStart) & $FF
 	inc l
-	ld b, b
-	ld [hl], $02
+	ld [hl], $01
 
 .noAnimChange::
 	pop hl

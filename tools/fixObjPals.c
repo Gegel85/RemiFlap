@@ -47,8 +47,10 @@ int shiftPals(const char *palPath, char *tilesPath)
         for (int i = 0; i < 8; i++) {
 	   tileBuffer2[0] <<= 1;
 	   tileBuffer2[1] <<= 1;
-	   tileBuffer2[0] |= (tileBuffer[0] ^ 1) & 1;
-	   tileBuffer2[1] |= (tileBuffer[0] ^ tileBuffer[1]) & 1;
+	   if ((tileBuffer[0] & 1U) || (tileBuffer[1] & 1U)) {
+		   tileBuffer2[0] |= (tileBuffer[0] ^ 1) & 1;
+		   tileBuffer2[1] |= (tileBuffer[0] ^ tileBuffer[1]) & 1;
+	   }
 	   tileBuffer[0] >>= 1;
 	   tileBuffer[1] >>= 1;
         }
