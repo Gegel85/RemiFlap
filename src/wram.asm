@@ -38,8 +38,12 @@ playerSpeed::
 	ds $1
 fireAnimationCounter::
 	ds $1
+fireColumnNextColumnAddr::
+	ds $2
 fireGenerationCounter::
 	ds $1
+fireColumns::
+	ds $C
 
 
 SECTION "OAM", WRAM0[$CE00]

@@ -44,8 +44,13 @@ drawFireColumn::
 	push hl
 	push bc
 	reg WRAMBankSelect, 3
+	xor a
+	or c
+	ld a, 1
 	ld de, $20 - 2
-	res 1, a
+	jr z, .loopBank1SkipMiddle
+	cp c
+	jr z, .loopBank1SkipTop
 .loopBank1::
 	ld [hli], a
 	set 5, a
@@ -57,18 +62,25 @@ drawFireColumn::
 	dec c
 	jr nz, .loopBank1
 
+.loopBank1SkipTop::
 	set 6, a
 	ld [hli], a
 	set 5, a
 	ld [hli], a
 	and ~(1 << 5) & ~(1 << 6)
 	add hl, de
-	ld e, $20
+.loopBank1SkipMiddle::
+	inc a
+	ld c, FIRE_COLUMS_HOLE_SIZE
+.loopBank1Middle::
+	ld [hli], a
+	set 5, a
+	ld [hli], a
+	res 5, a
 	add hl, de
-	add hl, de
-	add hl, de
-	add hl, de
-	ld e, $20 - 2
+	dec c
+	jr nz, .loopBank1Middle
+	dec a
 	jr .loopBank1
 
 .next::
@@ -76,7 +88,13 @@ drawFireColumn::
 	pop hl
 	reset WRAMBankSelect
 	ld e, $20 - 1
+	inc a
+	cp c
+	jr z, .loopBank0SkipTop
+	xor a
+	or c
 	ld a, ((backgroundMap - background - $1000) + (fireSprite1 - remiliaSprite)) / $10 + 1
+	jr z, .loopBank0SkipMiddle
 .loopBank0:
 	ld [hli], a
 	ld [hl], a
@@ -86,18 +104,23 @@ drawFireColumn::
 	dec c
 	jr nz, .loopBank0
 
+.loopBank0SkipTop::
+	ld a, ((backgroundMap - background - $1000) + (fireSprite1 - remiliaSprite)) / $10
+	ld [hli], a
+	ld [hl], a
+	add hl, de
+	inc a
+.loopBank0SkipMiddle::
+	ld c, FIRE_COLUMS_HOLE_SIZE
+.loopBank0Middle::
+	ld [hli], a
+	ld [hl], a
+	add hl, de
+	dec c
+	jr nz, .loopBank0Middle
 	dec a
 	ld [hli], a
 	ld [hl], a
-	add hl, de
-	inc e
-	add hl, de
-	add hl, de
-	add hl, de
-	add hl, de
-	ld [hli], a
-	ld [hl], a
 	inc a
-	dec e
 	add hl, de
 	jr .loopBank0

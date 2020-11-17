@@ -32,7 +32,6 @@ remiliaSpritesParams::
 	db $88, $01
 	ds $2
 
-
 showPlayer::
 	ld hl, oamSrc
 	ld de, remiliaSpritesParams
@@ -40,7 +39,6 @@ showPlayer::
 	ld c, a
 	ld a, [playerSpeed]
 
-	ld b, b
 	bit 7, a
 	jr nz, .anim3
 

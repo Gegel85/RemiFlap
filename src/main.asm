@@ -2,7 +2,11 @@ include "src/constants.asm"
 include "src/macro.asm"
 include "src/registers.asm"
 
+SPEED_FORCE = 2
+MAX_UP_SPEED = -6
 GRAVITY_COUNTER = 6
+TIME_SPAWN_TIMING = 8
+FIRE_COLUMS_HOLE_SIZE = 4
 
 SECTION "Main", ROM0
 
@@ -50,12 +54,8 @@ lockup::
 	halt
 	jr .loop
 
-spriteInitValues::
-	db $55, $20, (backgroundMap - background - $1000) / $10 + 1, $01 ; Top left part of player
-	db $57, $28, (backgroundMap - background - $1000) / $10    , $00 ; Remilia hat
-	db $5B, $28, (backgroundMap - background - $1000) / $10 + 3, $01 ; Bottom right part of player
-	db $5B, $23, (backgroundMap - background - $1000) / $10 + 4, $02 ; Remilia wing
-	db $5D, $20, (backgroundMap - background - $1000) / $10 + 2, $01 ; Bottom left part of player
+fireCustomPal::
+	dw $3DEF, $018F, $00CF, $000F
 
 ; Main function
 main::
@@ -97,6 +97,15 @@ game::
 	dec b
 	jr nz, .bgPalLoop
 
+	ld de, fireCustomPal
+	ld b, $8
+.bgPalLoop2::
+	ld a, [de]
+	inc de
+	ld [hl], a
+	dec b
+	jr nz, .bgPalLoop2
+
 	ld hl, cgbObjPalIndex
 	ld a, $80
 	ld [hli], a
@@ -111,19 +120,18 @@ game::
 
 	call copyBgTilemap
 
-	ld hl, vramBgMirror + $10
-	ld c, 8
-	call drawFireColumn
-
 	reg lcdCtrl, %10010011
 initGame::
 	reg playerPos, $55
 	reset playerSpeed
 
-	ld hl, spriteInitValues
-	ld de, oamSrc
-	ld bc, main - spriteInitValues
-	call copyMemory
+	ld hl, fireColumnNextColumnAddr
+	ld a, vramBgMirror >> 8
+	ld [hli], a
+	xor a
+	ld [hli], a
+	ld a, 6 * 8
+	ld [hl], a
 
 	ld b, $30
 	push bc
@@ -163,8 +171,6 @@ gameLoop::
 	ld hl, bgScrollX
 	inc [hl]
 
-	call showPlayer
-
 .updatePlayer::
 	ld hl, playerSpeed
 	ld a, [hl]
@@ -189,11 +195,54 @@ gameLoop::
 	bit UP_BIT, a
 	jr nz, .noJump
 .jump::
-	reg playerSpeed, -2
+	ld b, b
+	call random
+	ld a, [playerSpeed]
+	ld b, a
+	srl a
+	sub SPEED_FORCE
+	bit 7, b
+	jr z, .ok
+	set 7, a
+	cp MAX_UP_SPEED
+	jr nc, .ok
+	ld a, MAX_UP_SPEED
+	jr .ok
+.ok::
+	ld [playerSpeed], a
 	pop bc
 	ld b, GRAVITY_COUNTER
 	push bc
 .noJump::
+	call showPlayer
+
+	ld hl, fireGenerationCounter
+	ld a, [hl]
+	dec a
+	ld [hl], a
+	jr nz, .noFireGeneration
+	ld a, TIME_SPAWN_TIMING * 8
+	ld [hld], a
+
+	ld a, [hl]
+	ld d, a
+	and $E0
+	ld e, a
+	ld a, d
+	add a, TIME_SPAWN_TIMING
+	and $1F
+	ld [hld], a
+	ld h, [hl]
+	ld l, d
+.randGen::
+	call random
+	and $F
+	cp 18 - FIRE_COLUMS_HOLE_SIZE
+	jr nc, .randGen
+	ld c, a
+	call drawFireColumn
+
+.noFireGeneration::
 	jp gameLoop
 
 
