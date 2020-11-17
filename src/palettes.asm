@@ -7,3 +7,6 @@ remiliaPal::
 
 backgroundPal::
 	incbin "assets/background.pal"
+
+firePal::
+	incbin "assets/fire1.pal"

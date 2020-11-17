@@ -38,6 +38,8 @@ COLORED_IMGS = \
 	assets/remilia01.png \
 	assets/remilia11.png \
 	assets/background.png \
+	assets/fire1.png \
+	assets/fire2.png \
 
 COMPLEX_COLORED_IMGS =
 

@@ -4,8 +4,9 @@ include "src/sound/constants.asm"
 
 randomRegister::
 	ds $1
-
 frameCounter::
+	ds $1
+keysDisabled::
 	ds $1
 
 playingMusics::
@@ -34,6 +35,8 @@ nbRepeated::
 playerPos::
 	ds $1
 playerSpeed::
+	ds $1
+fireAnimationCounter::
 	ds $1
 
 SECTION "OAM", WRAMX[$DE00]

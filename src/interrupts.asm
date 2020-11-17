@@ -20,6 +20,34 @@ vblank_interrupt::
 .skip:
 	ld a, oamSrc >> 8
 	call DMA
+	ld hl, fireAnimationCounter
+	ld a, [hl]
+	add 8
+	ld [hl], a
+	and $1F
+	jr nz, .noAnimChange
+	bit 5, [hl]
+	ld hl, newDmaSrcH
+	jr z, .anim2
+	ld [hl], fireSprite1 >> 8
+	inc l
+	ld [hl], fireSprite1 & $FF
+	jr .changeAnimation
+
+.anim2::
+	ld [hl], fireSprite2 >> 8
+	inc l
+	ld [hl], fireSprite2 & $FF
+
+.changeAnimation::
+	inc l
+	ld [hl], ((backgroundMap - background - $1000) + (fireSprite1 - remiliaSprite) + vramStart) >> 8
+	inc l
+	ld [hl], ((backgroundMap - background - $1000) + (fireSprite1 - remiliaSprite) + vramStart) & $FF
+	inc l
+	ld [hl], $02
+
+.noAnimChange::
 	pop hl
 	pop af
 	reti

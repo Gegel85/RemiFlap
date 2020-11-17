@@ -4,48 +4,6 @@ include "src/registers.asm"
 
 SECTION "Main", ROM0
 
-copyBgTilemap::
-	ld a, 1 << 3
-	ld [$FFFD], a
-	ld [$FFFE], a
-	ld hl, vramBgStart
-	ld de, backgroundMap
-.loop:
-	reset vramBankSelect
-	ld a, [de]
-	inc de
-	ld [hl], a
-	xor $FF
-	jr z, .bitSet
-	bit 7, a
-	jr z, .force
-	cp $FF
-	ld a, [$FFFE]
-	jr nz, .writeValue
-	ld b, a
-	ld a, [$FFFD]
-	ld c, a
-	xor a
-	ld [$FFFD], a
-	xor a
-	and c
-	ld a, b
-	jr z, .force
-	jr .writeValue
-.bitSet:
-	reset $FFFE
-.force::
-	ld a, 1 << 3
-.writeValue:
-	ld b, a
-	reg vramBankSelect, 1
-	ld a, b
-	ld [hli], a
-	bit 2, h
-	jr z, .loop
-	reset vramBankSelect
-	ret
-
 notCGB::
 	call waitVBLANK
 	reset lcdCtrl
@@ -125,11 +83,15 @@ game::
 	ld bc, $50
 	call copyMemory
 
+	ld hl, fireSprite1
+	ld bc, $30
+	call copyMemory
+
 	ld hl, cgbBgPalIndex
 	ld a, $80
 	ld [hli], a
 	ld de, backgroundPal
-	ld b, 8
+	ld b, $10
 .bgPalLoop::
 	ld a, [de]
 	inc de
@@ -151,9 +113,14 @@ game::
 
 	call copyBgTilemap
 
+	ld hl, vramBgStart + $10
+	ld c, 8
+	call drawFireColumn
+
 	reg lcdCtrl, %10010011
 initGame::
 	reg playerPos, $55
+	reg playerSpeed, -5
 
 	ld hl, spriteInitValues
 	ld de, oamSrc
@@ -205,7 +172,7 @@ gameLoop::
 	ld [hl], a
 
 .playerControl::
-	call getKeys
+	call getKeysFiltered
 	bit A_BIT, a
 	jr z, .jump
 	bit UP_BIT, a
@@ -221,3 +188,4 @@ include "src/interrupts.asm"
 include "src/sound/music.asm"
 include "src/sound/sfx.asm"
 include "src/utils.asm"
+include "src/drawer.asm"
