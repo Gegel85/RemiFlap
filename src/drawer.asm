@@ -123,3 +123,57 @@ drawFireColumn::
 	inc a
 	add hl, de
 	jr .loopBank0
+
+drawScore::
+	ld hl, score + 1
+	ld a, [hl]
+	and $F0
+	jr z, .not4
+	ld bc, $4403
+	jr .next
+.not4::
+	ld a, [hld]
+	and $F
+	jr z, .not3
+	ld bc, $4802
+	jr .next
+.not3::
+	ld a, [hl]
+	and $F0
+	jr z, .not2
+	ld bc, $4C01
+	jr .next
+.not2::
+	ld bc, $5000
+.next::
+	ld hl, oamSrc + 8 * 4
+.loop::
+	ld a, $18
+	ld [hli], a
+	ld a, b
+	ld [hli], a
+	add 8
+	ld b, a
+	bit 1, c
+	jr z, .lower
+	ld a, [score + 1]
+	jr .after
+.lower::
+	ld a, [score]
+.after::
+	bit 0, c
+	jr z, .noSwap
+	swap a
+.noSwap::
+	and $F
+	add $97
+	ld [hli], a
+	ld a, 3
+	ld [hli], a
+	xor a
+	or c
+	push af
+	dec c
+	pop af
+	jr nz, .loop
+	ret

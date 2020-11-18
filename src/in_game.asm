@@ -81,6 +81,14 @@ initGame::
 	xor a
 	call fillMemory
 
+	ld de, oamSrc + 4 * 8
+	ld bc, 4 * 4
+	call fillMemory
+
+	ld hl, score
+	ld [hli], a
+	ld [hli], a
+
 	ld b, $30
 	push bc
 	reg lcdCtrl, %10010011
@@ -215,6 +223,19 @@ gameLoop::
 	ld hl, fireColumns
 .fireColumnUpdateLoop::
 	dec [hl]
+	jr nz, .noScoreUpdate
+	push hl
+	ld hl, score
+	ld a, [hl]
+	add 1
+	daa
+	ld [hli], a
+	ld a, [hl]
+	adc 0
+	daa
+	ld [hl], a
+	pop hl
+.noScoreUpdate::
 	ld a, $F
 	cp [hl]
 	inc hl
@@ -229,5 +250,9 @@ gameLoop::
 	inc hl
 	dec b
 	jr nz, .fireColumnUpdateLoop
-
+	call drawScore
 	jp gameLoop
+
+fireCustomPal::
+	;dw $3DEF, $018F, $00CF, $000F
+	dw $1CE7, $00C7, $0067, $0007

@@ -28,11 +28,10 @@ remiliaSprite::
 
 fireSprite1::
 	incbin "assets/fire1.cfx"
-fireSprite2::
-	incbin "assets/fire2.cfx"
-
 numbers1::
 	incbin "assets/numbers1.cfx"
+fireSprite2::
+	incbin "assets/fire2.cfx"
 numbers2::
 	incbin "assets/numbers2.cfx"
 

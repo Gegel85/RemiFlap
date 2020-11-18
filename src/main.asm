@@ -53,9 +53,6 @@ lockup::
 	halt
 	jr .loop
 
-fireCustomPal::
-	dw $3DEF, $018F, $00CF, $000F
-
 ; Main function
 main::
 	ld sp, $FFFF
