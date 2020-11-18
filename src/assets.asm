@@ -31,6 +31,11 @@ fireSprite1::
 fireSprite2::
 	incbin "assets/fire2.cfx"
 
+numbers1::
+	incbin "assets/numbers1.cfx"
+numbers2::
+	incbin "assets/numbers2.cfx"
+
 noCGBScreen::
 	incbin "assets/nocgberror.fx"
 noCGBScreenMap::

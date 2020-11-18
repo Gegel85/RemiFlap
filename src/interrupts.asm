@@ -11,6 +11,8 @@
 vblank_interrupt::
 	push af
 	push hl
+	push de
+	push bc
 	call updateSfx
 	xor a
 	ld hl, frameCounter
@@ -49,6 +51,8 @@ vblank_interrupt::
 	ld [hl], $01
 
 .noAnimChange::
+	pop bc
+	pop de
 	pop hl
 	pop af
 	reti

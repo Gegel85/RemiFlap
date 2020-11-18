@@ -1,7 +1,7 @@
 copyBgTilemap::
 	ld a, 1 << 3
-	ld [$FFFD], a
-	ld [$FFFE], a
+	ld [$FFFA], a
+	ld [$FFFB], a
 	ld hl, vramBgMirror
 	ld de, backgroundMap
 .loop:
@@ -14,20 +14,20 @@ copyBgTilemap::
 	bit 7, a
 	jr z, .force
 	cp $FF
-	ld a, [$FFFE]
+	ld a, [$FFFB]
 	jr nz, .writeValue
 	ld b, a
-	ld a, [$FFFD]
+	ld a, [$FFFA]
 	ld c, a
 	xor a
-	ld [$FFFD], a
+	ld [$FFFA], a
 	xor a
 	and c
 	ld a, b
 	jr z, .force
 	jr .writeValue
 .bitSet:
-	reset $FFFE
+	reset $FFFB
 .force::
 	ld a, 1 << 3
 .writeValue:

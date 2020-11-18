@@ -52,6 +52,8 @@ COLORED_IMGS = \
 	assets/background.png \
 	assets/fire1.png \
 	assets/fire2.png \
+	assets/numbers1.png \
+	assets/numbers2.png \
 
 COMPLEX_COLORED_IMGS =
 

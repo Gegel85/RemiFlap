@@ -1,9 +1,9 @@
 remiliaSpritesParams::
-	db $28, $00
-	db $00, $01
-	db $80, $01
-	db $68, $01
-	db $63, $02
+	db $28, $00 ; incbin "assets/remi0d/remi_hat.cfx"
+	db $00, $01 ; incbin "assets/remi0d/remilia00.cfx"
+	db $80, $01 ; incbin "assets/remi0d/remilia01.cfx"
+	db $68, $01 ; incbin "assets/remi0d/remilia11.cfx"
+	db $63, $02 ; incbin "assets/remi0d/remi_wing.cfx"
 	ds $2
 	ds $2
 	ds $2
@@ -83,6 +83,7 @@ showPlayer::
 .notZero::
 	add c
 	inc de
+	add 8
 	ld [hli], a
 	pop af
 	and $F

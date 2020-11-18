@@ -42,8 +42,12 @@ fireColumnNextColumnAddr::
 	ds $2
 fireGenerationCounter::
 	ds $1
+fireColumnsIndex::
+	ds $1
 fireColumns::
-	ds $C
+	ds $8
+score::
+	ds $2
 
 
 SECTION "OAM", WRAM0[$CE00]
