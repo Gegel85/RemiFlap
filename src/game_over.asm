@@ -1,4 +1,5 @@
 gameOver::
+	halt
 	call getKeysFiltered
 	bit START_BIT, a
 	jp z, initGame

@@ -76,6 +76,11 @@ initGame::
 	ld a, 6 * 8
 	ld [hl], a
 
+	ld de, fireColumnsIndex
+	ld bc, 9
+	xor a
+	call fillMemory
+
 	ld b, $30
 	push bc
 	reg lcdCtrl, %10010011
@@ -190,7 +195,7 @@ gameLoop::
 	ld a, d
 	adc 0
 	ld d, a
-	ld a, $B0
+	ld a, $C0
 	ld [de], a
 	inc de
 	ld a, c
@@ -205,11 +210,22 @@ gameLoop::
 	cp 144
 	jp nc, gameOver
 
+	ld c, a
 	ld b, 4
 	ld hl, fireColumns
 .fireColumnUpdateLoop::
 	dec [hl]
+	ld a, $F
+	cp [hl]
 	inc hl
+	jr c, .noCollision
+	ld a, [hl]
+	cp c
+	jr nc, gameOver
+	add FIRE_COLUMS_HOLE_SIZE * 8
+	cp c
+	jp c, gameOver
+.noCollision::
 	inc hl
 	dec b
 	jr nz, .fireColumnUpdateLoop

@@ -49,7 +49,7 @@ drawFireColumn::
 	ld a, 1
 	ld de, $20 - 2
 	jr z, .loopBank1SkipMiddle
-	cp c
+	dec c
 	jr z, .loopBank1SkipTop
 .loopBank1::
 	ld [hli], a
@@ -88,13 +88,12 @@ drawFireColumn::
 	pop hl
 	reset WRAMBankSelect
 	ld e, $20 - 1
-	inc a
-	cp c
-	jr z, .loopBank0SkipTop
 	xor a
 	or c
 	ld a, ((backgroundMap - background - $1000) + (fireSprite1 - remiliaSprite)) / $10 + 1
 	jr z, .loopBank0SkipMiddle
+	dec c
+	jr z, .loopBank0SkipTop
 .loopBank0:
 	ld [hli], a
 	ld [hl], a
