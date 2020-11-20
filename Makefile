@@ -30,6 +30,7 @@ IMGS = \
 	assets/nocgberror.png
 
 COMPRESSED_IMGS = \
+	assets/font.png
 
 COLORED_IMGS = \
 	assets/remi0d/remi_hat.png \
@@ -54,6 +55,7 @@ COLORED_IMGS = \
 	assets/fire2.png \
 	assets/numbers1.png \
 	assets/numbers2.png \
+	assets/main_menu.png \
 
 COMPLEX_COLORED_IMGS =
 

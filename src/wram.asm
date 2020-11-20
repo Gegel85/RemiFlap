@@ -32,6 +32,10 @@ playingSfx4Timer::
 nbRepeated::
 	ds $1
 
+fireColumnHoleSize::
+	ds $1
+
+mainMenuArrowAnimationCounter::
 playerPos::
 	ds $1
 playerSpeed::

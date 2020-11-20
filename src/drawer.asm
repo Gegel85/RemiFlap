@@ -71,7 +71,10 @@ drawFireColumn::
 	add hl, de
 .loopBank1SkipMiddle::
 	inc a
-	ld c, FIRE_COLUMS_HOLE_SIZE
+	push af
+	ld a, [fireColumnHoleSize]
+	ld c, a
+	pop af
 .loopBank1Middle::
 	ld [hli], a
 	set 5, a
@@ -110,7 +113,10 @@ drawFireColumn::
 	add hl, de
 	inc a
 .loopBank0SkipMiddle::
-	ld c, FIRE_COLUMS_HOLE_SIZE
+	push af
+	ld a, [fireColumnHoleSize]
+	ld c, a
+	pop af
 .loopBank0Middle::
 	ld [hli], a
 	ld [hl], a

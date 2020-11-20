@@ -25,7 +25,6 @@ remiliaSprite::
 	incbin "assets/remim45d/remilia.cfx"
 	ds $10
 
-
 fireSprite1::
 	incbin "assets/fire1.cfx"
 numbers1::
@@ -34,6 +33,8 @@ fireSprite2::
 	incbin "assets/fire2.cfx"
 numbers2::
 	incbin "assets/numbers2.cfx"
+font::
+	incbin "assets/font.zfx"
 
 noCGBScreen::
 	incbin "assets/nocgberror.fx"
@@ -45,5 +46,9 @@ background::
 	incbin "assets/background.cfx"
 backgroundMap::
 	incbin "assets/background.tilemap"
+mainMenuBg::
+	incbin "assets/main_menu.cfx"
+mainMenuBgMap::
+	incbin "assets/main_menu.tilemap"
 
 include "src/palettes.asm"

@@ -3,19 +3,12 @@ game::
 	reset lcdCtrl
 
 	reg VRAMBankSelect, 1
-	ld hl, background
-	ld bc, $1000
-	ld de, vramStart
-	call copyMemory
+	startGPDMA background, vramStart, $800
+	startGPDMA background + $800, vramStart + $800, $800
 
 	reset VRAMBankSelect
-	ld bc, backgroundMap - background - $1000
-	ld de, vramStart
-	call copyMemory
-
-	ld hl, remiliaSprite
-	ld bc, $200
-	call copyMemory
+	startGPDMA background + $1000, vramStart, backgroundMap - background - $1000
+	startGPDMA remiliaSprite, vramStart + backgroundMap - background - $1000, $200
 
 	ld hl, cgbBgPalIndex
 	ld a, $80
@@ -97,32 +90,13 @@ gameLoop::
 	halt
 
 .copyBuffer::
-	reset WRAMBankSelect
-	ld [VRAMBankSelect], a
-	ld hl, newDmaSrcH
-	ld [hl], vramBgMirror >> 8
-	inc l
-	ld [hl], vramBgMirror & $FF
-	inc l
-	ld [hl], vramBgStart >> 8
-	inc l
-	ld [hl], vramBgStart & $FF
-	inc l
-	ld [hl], $24
 	reg WRAMBankSelect, 3
 	ld [VRAMBankSelect], a
-	ld hl, newDmaSrcH
-	ld [hl], vramBgMirror >> 8
-	inc l
-	ld [hl], vramBgMirror & $FF
-	inc l
-	ld [hl], vramBgStart >> 8
-	inc l
-	ld [hl], vramBgStart & $FF
-	inc l
-	ld [hl], $24
+	startGPDMA vramBgMirror, vramBgStart, $250
+
 	reset WRAMBankSelect
 	ld [VRAMBankSelect], a
+	startGPDMA vramBgMirror, vramBgStart, $250
 
 .updateScroll::
 	ld hl, bgScrollX
@@ -186,10 +160,13 @@ gameLoop::
 	ld [hld], a
 	ld h, [hl]
 	ld l, d
+	ld a, [fireColumnHoleSize]
+	ld c, a
 .randGen::
 	call random
 	and $F
-	cp 18 - FIRE_COLUMS_HOLE_SIZE
+	sub c
+	cp 18
 	jr nc, .randGen
 	ld c, a
 	ld de, fireColumns
@@ -243,7 +220,14 @@ gameLoop::
 	ld a, [hl]
 	cp c
 	jr nc, gameOver
-	add FIRE_COLUMS_HOLE_SIZE * 8
+	push bc
+	ld b, a
+	ld a, [fireColumnHoleSize]
+	sla a
+	sla a
+	sla a
+	add b
+	pop bc
 	cp c
 	jp c, gameOver
 .noCollision::

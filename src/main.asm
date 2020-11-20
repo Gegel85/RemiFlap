@@ -5,7 +5,8 @@ include "src/registers.asm"
 SPEED_FORCE = 2
 GRAVITY_COUNTER = 6
 TIME_SPAWN_TIMING = 8
-FIRE_COLUMS_HOLE_SIZE = 4
+MIN_DIFFICULTY = 5
+MAX_DIFFICULTY = 3
 
 SECTION "Main", ROM0
 
@@ -13,6 +14,7 @@ notCGB::
 	call waitVBLANK
 	reset lcdCtrl
 	reg dmgBgPalData, $E4
+
 	ld hl, noCGBScreen
 	ld de, vramStart
 	ld bc, noCGBScreenMap - noCGBScreen

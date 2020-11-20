@@ -1,1 +1,147 @@
+ARROW_LEFT_ADDR = $9925
+ARROW_RIGHT_ADDR = $992E
+
 mainMenu::
+	call waitVBLANK
+	reset lcdCtrl
+
+	reg VRAMBankSelect, 1
+	ld de, vramBgStart
+	xor a
+	ld [bgScrollX], a
+	ld bc, $800
+	call fillMemory
+
+	reg ARROW_LEFT_ADDR, 1 << 5
+
+	reset VRAMBankSelect
+	startGPDMA mainMenuBg, vramStart, mainMenuBgMap - mainMenuBg
+
+	ld de, vramStart + $41 * $10
+	ld hl, font
+	ld bc, 8 * 26
+	ld a, 2
+	call uncompress
+
+	ld de, vramStart + $61 * $10
+	ld bc, 8 * 29
+	call uncompress
+
+	ld de, mainMenuBgMap
+	ld hl, vramBgStart
+	ld b, 18
+.copyLoop:
+	ld c, 20
+.miniLoop:
+	ld a, [de]
+	ld [hli], a
+	inc de
+	dec c
+	jr nz, .miniLoop
+	push bc
+	ld bc, 12
+	add hl, bc
+	pop bc
+	dec b
+	jr nz, .copyLoop
+
+	ld hl, cgbBgPalIndex
+	ld a, $80
+	ld [hli], a
+	ld de, mainMenuBgPal
+	ld b, $8
+.bgPalLoop::
+	ld a, [de]
+	inc de
+	ld [hl], a
+	dec b
+	jr nz, .bgPalLoop
+
+	ld a, "|"
+	ld [ARROW_LEFT_ADDR], a
+	ld [ARROW_RIGHT_ADDR], a
+
+	ld a, [fireColumnHoleSize]
+	or a
+	jr nz, .next
+	ld a, 4
+	ld [fireColumnHoleSize], a
+.next::
+	call updateDifficultyIndicator
+
+	ld de, $99C4
+	ld bc, 12
+	ld hl, startText
+	call copyMemory
+
+	reg winPosY, 80
+
+	reg lcdCtrl, %11010000
+
+	xor a
+	ld [mainMenuArrowAnimationCounter], a
+
+	ld a, [fireColumnHoleSize]
+	or a
+	jr nz, .loop
+	ld a, 4
+	ld [fireColumnHoleSize], a
+
+.loop::
+	reset interruptFlag
+	ld hl, mainMenuArrowAnimationCounter
+	inc [hl]
+	bit 5, [hl]
+	jr z, .skip
+	ld [hl], a
+	ld a, [ARROW_LEFT_ADDR]
+	xor 1
+	ld [ARROW_LEFT_ADDR], a
+	ld [ARROW_RIGHT_ADDR], a
+	ld a, [lcdCtrl]
+	xor 1 << 5
+	ld [lcdCtrl], a
+.skip::
+	call getKeysFiltered
+	bit START_BIT, a
+	jr z, game
+	bit LEFT_BIT, a
+	jr z, .left
+	bit RIGHT_BIT, a
+	jr nz, .halt
+
+	ld hl, fireColumnHoleSize
+	dec [hl]
+	ld a, MAX_DIFFICULTY - 1
+	cp [hl]
+	jr nz, .halt
+	ld a, MIN_DIFFICULTY
+	ld [hl], a
+	jr .halt
+.left::
+	ld hl, fireColumnHoleSize
+	inc [hl]
+	ld a, MIN_DIFFICULTY + 1
+	cp [hl]
+	jr nz, .halt
+	ld a, MAX_DIFFICULTY
+	ld [hl], a
+.halt::
+	halt
+	ld a, [fireColumnHoleSize]
+	call updateDifficultyIndicator
+	call random
+	jr .loop
+
+updateDifficultyIndicator::
+	ld hl, difficulties
+	sub MAX_DIFFICULTY
+	sla a
+	sla a
+	sla a
+	ld d, 0
+	ld e, a
+	add hl, de
+	ld de, $9927
+	ld bc, 6
+	jp copyMemory

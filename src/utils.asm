@@ -44,6 +44,14 @@ uncompress::
 	cpl
 	ld [hli], a
 	jr .endCase
+.case2:
+	pop hl
+	ld a, [de]
+	cpl
+	ld [hli], a
+	ld [hli], a
+	nop
+	jr .endCase
 .endCase:
 
 	inc de

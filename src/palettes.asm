@@ -8,3 +8,5 @@ backgroundPal::
 
 firePal::
 	incbin "assets/fire1.pal"
+mainMenuBgPal::
+	incbin "assets/main_menu.pal"
