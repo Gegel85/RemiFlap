@@ -5,7 +5,7 @@ copyBgTilemap::
 	ld hl, vramBgMirror
 	ld de, backgroundMap
 .loop:
-	reset WRAMBankSelect
+	res 2, h
 	ld a, [de]
 	inc de
 	ld [hl], a
@@ -32,18 +32,18 @@ copyBgTilemap::
 	ld a, 1 << 3
 .writeValue:
 	ld b, a
-	reg WRAMBankSelect, 3
+	set 2, h
 	ld a, b
 	ld [hli], a
-	bit 2, h
+	bit 4, h
 	jr z, .loop
-	reset WRAMBankSelect
+	res 2, h
 	ret
 
 drawFireColumn::
 	push hl
 	push bc
-	reg WRAMBankSelect, 3
+	set 2, h
 	xor a
 	or c
 	ld a, 1
@@ -57,7 +57,7 @@ drawFireColumn::
 	ld [hli], a
 	res 5, a
 	add hl, de
-	bit 2, h
+	bit 4, h
 	jr nz, .next
 	dec c
 	jr nz, .loopBank1
@@ -89,7 +89,7 @@ drawFireColumn::
 .next::
 	pop bc
 	pop hl
-	reset WRAMBankSelect
+	res 2, h
 	ld e, $20 - 1
 	xor a
 	or c

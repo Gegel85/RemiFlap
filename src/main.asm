@@ -73,3 +73,5 @@ include "src/sound/sfx.asm"
 include "src/utils.asm"
 include "src/drawer.asm"
 include "src/animation.asm"
+
+include "src/sound/septette_for_the_dead_princess/main.asm"

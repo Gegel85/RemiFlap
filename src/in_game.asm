@@ -88,15 +88,18 @@ initGame::
 gameLoop::
 	reset interruptFlag
 	halt
+	ld a, [lcdLine]
+	cp $90
+	jr c, gameLoop
 
 .copyBuffer::
-	reg WRAMBankSelect, 3
+	ld a, 1
 	ld [VRAMBankSelect], a
-	startGPDMA vramBgMirror, vramBgStart, $250
+	startGPDMA vramBg1Mirror, vramBgStart, $240
 
-	reset WRAMBankSelect
+	xor a
 	ld [VRAMBankSelect], a
-	startGPDMA vramBgMirror, vramBgStart, $250
+	startHDMA vramBgMirror, vramBgStart, $240
 
 .updateScroll::
 	ld hl, bgScrollX

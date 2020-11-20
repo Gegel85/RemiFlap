@@ -76,17 +76,20 @@ mainMenu::
 
 	reg winPosY, 80
 
-	reg lcdCtrl, %11010000
+	reg lcdCtrl, %11010001
 
 	xor a
 	ld [mainMenuArrowAnimationCounter], a
+
+	ld hl, RemiliaTheme
+	ld de, playingMusics
+	call startMusic
 
 	ld a, [fireColumnHoleSize]
 	or a
 	jr nz, .loop
 	ld a, 4
 	ld [fireColumnHoleSize], a
-
 .loop::
 	reset interruptFlag
 	ld hl, mainMenuArrowAnimationCounter
@@ -128,9 +131,12 @@ mainMenu::
 	ld [hl], a
 .halt::
 	halt
+	ld a, [lcdLine]
+	cp $90
+	jr c, .halt
+	call random
 	ld a, [fireColumnHoleSize]
 	call updateDifficultyIndicator
-	call random
 	jr .loop
 
 updateDifficultyIndicator::

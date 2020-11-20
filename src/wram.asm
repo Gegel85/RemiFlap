@@ -53,15 +53,28 @@ fireColumns::
 score::
 	ds $2
 
+SECTION "AUDIO_REGISTERS_MIRROR", WRAM0[$C410]
+Channel1Mirror::
+	ds $6
+Channel2Mirror::
+	ds $4
+Channel3Mirror::
+	ds $6
+Channel4Mirror::
+	ds $4
+APUParamsMirror::
+	ds $3
 
-SECTION "OAM", WRAM0[$CE00]
+SECTION "OAM", WRAM0[$C500]
 oamSrc::
 	ds $A0
 
 stackTop::
-	ds $D000 - stackTop
+	ds $C800 - stackTop
 stackBottom::
 
-SECTION "VRAM_MAP_SRC", WRAMX[$D800]
+SECTION "VRAM_MAP_SRC", WRAM0[$C800]
 vramBgMirror::
-	ds $300
+	ds $400
+vramBg1Mirror::
+	ds $400

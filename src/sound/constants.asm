@@ -12,7 +12,7 @@ REPEAT_PTR        RW 1
 MUSIC_STRUCT_SIZE RB 1
 
 ; Music
-SEMIQUAVER        EQU $4
+SEMIQUAVER        EQU $2
 QUAVER	          EQU 2 * SEMIQUAVER
 DOTTED_QUAVER     EQU QUAVER + SEMIQUAVER
 CROTCHET	  EQU 2 * QUAVER
@@ -142,7 +142,7 @@ ENDM
 
 writeRegisterI: MACRO
 	push hl
-	ld h, $CD
+	ld h, Channel1Mirror >> 8
 	ld [hl], \1
 	pop hl
 	ldi [hl], \1
@@ -150,7 +150,7 @@ ENDM
 
 writeRegister: MACRO
 	push hl
-	ld h, $CD
+	ld h, Channel1Mirror >> 8
 	ld [hl], \1
 	pop hl
 	ld [hl], \1

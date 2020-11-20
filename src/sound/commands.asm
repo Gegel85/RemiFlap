@@ -132,7 +132,7 @@ handlerDisableTerminals:
 	ld b, a
 	inc de
 
-	ld hl, $CD00 | ($FF & terminalSelect)
+	ld hl, Channel1Mirror | ($FF & terminalSelect)
 	and [hl]
 	ld [hl], a
 
@@ -157,7 +157,7 @@ handlerEnableTerminals:
 	ld b, a
 	inc de
 
-	ld hl, $CD00 | ($FF & terminalSelect)
+	ld hl, Channel1Mirror | ($FF & terminalSelect)
 	or [hl]
 	ld [hl], a
 
