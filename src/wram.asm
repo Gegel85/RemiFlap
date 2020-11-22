@@ -35,6 +35,9 @@ nbRepeated::
 fireColumnHoleSize::
 	ds $1
 
+VBLANKRegister::
+	ds $1
+
 mainMenuArrowAnimationCounter::
 playerPos::
 	ds $1

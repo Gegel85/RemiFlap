@@ -1,11 +1,16 @@
 gameOver::
+	reset VBLANKRegister
+.mainLoop::
+	reset interruptFlag
+	ld hl, VBLANKRegister
+.loop::
 	halt
-	ld a, [lcdLine]
-	cp $90
-	jr c, gameOver
+	bit 7, [hl]
+	jr z, .loop
+	res 7, [hl]
 	call getKeysFiltered
 	bit START_BIT, a
 	jp z, initGame
 	bit B_BIT, a
 	jp z, mainMenu
-	jr gameOver
+	jr .mainLoop

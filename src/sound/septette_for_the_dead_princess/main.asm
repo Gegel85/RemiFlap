@@ -4,7 +4,7 @@ include "src/sound/septette_for_the_dead_princess/channel3.asm"
 include "src/sound/septette_for_the_dead_princess/channel4.asm"
 
 RemiliaTheme::
-	db $100 - $DB
+	db $100 - $96
 	db %100
 	dw musicChan1RemiliaTheme
 	dw musicChan2RemiliaTheme

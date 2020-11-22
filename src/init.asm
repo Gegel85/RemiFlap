@@ -31,6 +31,15 @@ init::
 	reset lcdCtrl
 
 	xor a
+	ld b, $10
+	ld hl, $FF30
+.loop::
+	call random
+	ld [hli], a
+	dec b
+	jr nz, .loop
+
+	xor a
 	ld bc, $6000
 	ld de, vramStart
 	call fillMemory

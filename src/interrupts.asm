@@ -13,6 +13,9 @@ vblank_interrupt::
 	push hl
 	push de
 	push bc
+	ld hl, VBLANKRegister
+	bit 7, [hl]
+	jr nz, .noCopy
 	call updateSfx
 	xor a
 	ld hl, frameCounter
@@ -51,6 +54,20 @@ vblank_interrupt::
 	ld [hl], $0B
 
 .noAnimChange::
+	ld hl, VBLANKRegister
+	ld a, [hl]
+	bit 0, a
+	jr z, .noCopy
+
+	ld [VRAMBankSelect], a
+	startGPDMA vramBg1Mirror, vramBgStart, $240
+
+	xor a
+	ld [VRAMBankSelect], a
+	startHDMA vramBgMirror, vramBgStart, $240
+	ld hl, VBLANKRegister
+.noCopy::
+	set 7, [hl]
 	pop bc
 	pop de
 	pop hl

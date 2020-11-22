@@ -1,4 +1,5 @@
 game::
+	di
 	call waitVBLANK
 	reset lcdCtrl
 
@@ -53,6 +54,7 @@ game::
 	jr nz, .objPalLoop2
 
 initGame::
+	di
 	call waitVBLANK
 	reset lcdCtrl
 	reg playerPos, $55
@@ -82,24 +84,20 @@ initGame::
 	ld [hli], a
 	ld [hli], a
 
+	reg VBLANKRegister, 1
+
 	ld b, $30
 	push bc
 	reg lcdCtrl, %10010011
+	ei
 gameLoop::
 	reset interruptFlag
+	ld hl, VBLANKRegister
+.loop::
 	halt
-	ld a, [lcdLine]
-	cp $90
-	jr c, gameLoop
-
-.copyBuffer::
-	ld a, 1
-	ld [VRAMBankSelect], a
-	startGPDMA vramBg1Mirror, vramBgStart, $240
-
-	xor a
-	ld [VRAMBankSelect], a
-	startHDMA vramBgMirror, vramBgStart, $240
+	bit 7, [hl]
+	jr z, .loop
+	res 7, [hl]
 
 .updateScroll::
 	ld hl, bgScrollX

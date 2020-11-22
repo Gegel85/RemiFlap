@@ -2,9 +2,11 @@ ARROW_LEFT_ADDR = $9925
 ARROW_RIGHT_ADDR = $992E
 
 mainMenu::
+	di
 	call waitVBLANK
 	reset lcdCtrl
 
+	reset VBLANKRegister
 	reg VRAMBankSelect, 1
 	ld de, vramBgStart
 	xor a
@@ -85,6 +87,7 @@ mainMenu::
 	ld de, playingMusics
 	call startMusic
 
+	ei
 	ld a, [fireColumnHoleSize]
 	or a
 	jr nz, .loop
@@ -98,6 +101,8 @@ mainMenu::
 	jr z, .skip
 	ld [hl], a
 	ld a, [ARROW_LEFT_ADDR]
+	bit 7, a
+	jr nz, .skip
 	xor 1
 	ld [ARROW_LEFT_ADDR], a
 	ld [ARROW_RIGHT_ADDR], a
@@ -130,10 +135,13 @@ mainMenu::
 	ld a, MAX_DIFFICULTY
 	ld [hl], a
 .halt::
+	reset interruptFlag
+	ld hl, VBLANKRegister
+.loop2::
 	halt
-	ld a, [lcdLine]
-	cp $90
-	jr c, .halt
+	bit 7, [hl]
+	jr z, .loop2
+	res 7, [hl]
 	call random
 	ld a, [fireColumnHoleSize]
 	call updateDifficultyIndicator

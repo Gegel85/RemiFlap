@@ -15,6 +15,29 @@ reg: MACRO
 	ld [\1], a
 ENDM
 
+toggleCpuSpeed: MACRO
+	reg speedSwitch, 1
+	stop
+ENDM
+
+setCpuDoubleSpeed: MACRO
+	ld hl, speedSwitch
+	bit 7, [hl]
+	jr nz, .skip\@
+	set 0, [hl]
+	stop
+.skip\@:
+ENDM
+
+setCpuSimpleSpeed: MACRO
+	ld hl, speedSwitch
+	bit 7, [hl]
+	jr z, .skip\@
+	set 0, [hl]
+	stop
+.skip\@:
+ENDM
+
 startGPDMA: MACRO
 	ld hl, newDmaSrcH
 	ld [hl], (\1) >> 8
