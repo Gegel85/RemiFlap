@@ -15,22 +15,13 @@ game::
 	ld a, $80
 	ld [hli], a
 	ld de, backgroundPal
-	ld b, $10
+	ld b, $18
 .bgPalLoop::
 	ld a, [de]
 	inc de
 	ld [hl], a
 	dec b
 	jr nz, .bgPalLoop
-
-	ld de, fireCustomPal
-	ld b, $8
-.bgPalLoop2::
-	ld a, [de]
-	inc de
-	ld [hl], a
-	dec b
-	jr nz, .bgPalLoop2
 
 	ld hl, cgbObjPalIndex
 	ld a, $80
@@ -237,7 +228,3 @@ gameLoop::
 	jr nz, .fireColumnUpdateLoop
 	call drawScore
 	jp gameLoop
-
-fireCustomPal::
-	;dw $3DEF, $018F, $00CF, $000F
-	dw $1CE7, $00C7, $0067, $0007
