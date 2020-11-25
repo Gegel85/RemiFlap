@@ -11,6 +11,8 @@ game::
 	startGPDMA background + $1000, vramStart + $1000, backgroundMap - background - $1000
 	startGPDMA remiliaSprite, vramStart, $200
 
+	reset currentStage
+
 	ld de, vramStart + "A" * $10
 	ld hl, font
 	ld a, 3
@@ -57,6 +59,32 @@ initGame::
 	reset playerSpeed
 	ld [bgScrollX], a
 
+	ld a, [fireColumnHoleSize]
+	ld b, a
+	ld a, 7
+	sub b
+	sla a
+	sla a
+	sla a
+	sla a
+	ld b, a
+
+	ld c, 0
+	ld a, [currentStage]
+	sla a
+	rl c
+	sla a
+	rl c
+	sla a
+	rl c
+	sla a
+	rl c
+
+	add b
+	ld [score], a
+	ld a, c
+	adc 0
+	ld [score + 1], a
 	call copyBgTilemap
 
 	ld hl, fireColumnNextColumnAddr
@@ -75,10 +103,6 @@ initGame::
 	ld de, oamSrc + 4 * 8
 	ld bc, 4 * 4
 	call fillMemory
-
-	ld hl, score
-	ld [hli], a
-	ld [hli], a
 
 	reg VBLANKRegister, 1
 
@@ -202,14 +226,17 @@ gameLoop::
 	push hl
 	ld hl, score
 	ld a, [hl]
-	add 1
+	sub 1
 	daa
+	ld d, a
 	ld [hli], a
 	ld a, [hl]
-	adc 0
+	sbc 0
 	daa
 	ld [hl], a
 	pop hl
+	or d
+	jr z, bossFight
 .noScoreUpdate::
 	ld a, $F
 	cp [hl]
@@ -233,4 +260,13 @@ gameLoop::
 	dec b
 	jr nz, .fireColumnUpdateLoop
 	call drawScore
+
 	jp gameLoop
+
+
+bossFight::
+
+.finish::
+	ld hl, currentStage
+	inc [hl]
+	jp initGame

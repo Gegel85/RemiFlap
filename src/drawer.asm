@@ -182,6 +182,17 @@ drawScore::
 	dec c
 	pop af
 	jr nz, .loop
+
+	bit 4, l
+	ret nz
+.cleanLoop::
+	xor a
+	ld [hli], a
+	inc l
+	inc l
+	inc l
+	bit 4, l
+	jr z, .cleanLoop
 	ret
 
 bossesSprites::
@@ -198,9 +209,23 @@ bossesSprites::
 	db $14, $10, $20, $04
 	db $1C, $10, $21, $04
 	db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	db $00, $08, $00, $00
+	db $00, $00, $00, $00
+	db $00, $08, $00, $00
+	db $00, $08, $00, $00
+	db $00, $00, $00, $00
+	db $00, $08, $00, $00
+	db $00, $08, $00, $00
+	db $00, $00, $00, $00
+	db $00, $08, $00, $00
+	db $00, $00, $00, $00
+	db $00, $00, $00, $00
+	db $00, $00, $00, $00
+	db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 
 displayBoss::
 	ld a, [currentStage]
+	and 1
 	sla a
 	sla a
 	sla a
@@ -311,13 +336,18 @@ stageAnimationRumia::
 	xor a
 	jp fillMemory
 
+stageAnimationFlandre::
+	ret
 
 stageAnimationTable::
 	dw stageAnimationRumia
+	dw stageAnimationFlandre
 
 stageAnimation::
 	ld hl, stageAnimationTable
 	ld a, [currentStage]
+	and 1
+	sla a
 	ld d, 0
 	ld e, a
 	add hl, de

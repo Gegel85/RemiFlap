@@ -6,6 +6,10 @@ bossesAssets::
 	dw rumiaPal
 	dw darkFirePal
 	dw RumiaTheme
+	dw remiliaSprite
+	dw remiliaPal
+	dw firePal
+	dw RemiliaTheme
 
 baseSpritesValues::
 	db $55, $A8, "S", 3
@@ -49,7 +53,7 @@ animateStageStart::
 	reg oamSrc + $7A, a
 
 	ld a, b
-	sla a
+	and 1
 	sla a
 	sla a
 	sla a

@@ -1,7 +1,7 @@
 SECTION "Text", ROMX[$7D00], BANK[1]
 
 crashText::
-	db "FATAL ERROR} PC AT 38H"
+	db "FATAL\{PC at 0x38"
 
 startText::
 	db "Press", 0, 0, "START"

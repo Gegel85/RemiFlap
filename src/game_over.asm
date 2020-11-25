@@ -10,7 +10,10 @@ gameOver::
 	res 7, [hl]
 	call getKeysFiltered
 	bit START_BIT, a
-	jp z, initGame
+	jp z, .initGame
 	bit B_BIT, a
 	jp z, mainMenu
 	jr .mainLoop
+.initGame:
+	reset currentStage
+	jp initGame
