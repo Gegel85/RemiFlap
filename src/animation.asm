@@ -70,7 +70,7 @@ showPlayer::
 
 	ld a, [$FFFC]
 	ld [$FFFB], a
-	ld b, 8
+	ld b, 6
 .loop:
 	ld a, [de]
 	push af

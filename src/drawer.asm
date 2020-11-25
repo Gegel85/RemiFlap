@@ -183,3 +183,168 @@ drawScore::
 	pop af
 	jr nz, .loop
 	ret
+
+bossesSprites::
+	db $10, $08, $23, $06
+	db $10, $10, $24, $06
+	db $10, $18, $23, $26
+	db $18, $08, $25, $06
+	db $18, $10, $26, $06
+	db $18, $18, $25, $26
+	db $20, $08, $23, $46
+	db $20, $10, $24, $46
+	db $20, $18, $23, $66
+	db $14, $10, $22, $05
+	db $14, $10, $20, $04
+	db $1C, $10, $21, $04
+	db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+
+displayBoss::
+	ld a, [currentStage]
+	sla a
+	sla a
+	sla a
+	sla a
+	sla a
+	ld hl, bossesSprites
+	ld d, 0
+	ld e, a
+	add hl, de
+	ld de, oamSrc + $18
+	ld b, $C
+.loop::
+	ld a, [bossPos]
+	add [hl]
+	inc hl
+	ld [de], a
+	inc de
+
+	ld a, [bossPos + 1]
+	add [hl]
+	inc hl
+	ld [de], a
+	inc de
+
+	ld a, [hli]
+	ld [de], a
+	inc de
+
+	ld a, [hli]
+	ld [de], a
+	inc de
+
+	dec b
+	jr nz, .loop
+	ret
+
+stageAnimationRumia::
+	ld hl, bossAnimationRegisters
+
+	bit 7, [hl]
+	jr nz, .goAway
+
+	bit 6, [hl]
+	jr z, .ok
+
+	inc [hl]
+	jr .hideMist
+
+.ok::
+	ld a, [bossPos + 1]
+	cp 100
+	jr nz, .approach
+
+	ld a, [hl]
+	inc [hl]
+
+	bit 5, a
+	jr z, .flash3
+
+	bit 4, a
+	jr z, .flash2
+
+	and 3
+	jr nz, .hideMist
+	jr displayBoss
+
+.flash3::
+	bit 4, a
+	jr z, displayBoss
+
+	and 3
+	jr z, .hideMist
+	jr displayBoss
+
+.flash2::
+	and 1
+	jr z, displayBoss
+.hideMist::
+	ld hl, oamSrc + $18
+	ld b, 9
+	xor a
+.loop:
+	ld [hli], a
+	inc hl
+	inc hl
+	inc hl
+	dec b
+	jr nz, .loop
+	ret
+.approach::
+	ld a, 1
+	xor [hl]
+	ld [hl], a
+	ld d, a
+	ld e, $FE
+	jp moveBoss
+
+.goAway::
+	ld a, [bossPos + 1]
+	cp 160
+	jr z, .hideBoss
+
+	ld de, $0002
+	jp moveBoss
+.hideBoss::
+	ld de, oamSrc + $18
+	ld bc, $30
+	xor a
+	jp fillMemory
+
+
+stageAnimationTable::
+	dw stageAnimationRumia
+
+stageAnimation::
+	ld hl, stageAnimationTable
+	ld a, [currentStage]
+	ld d, 0
+	ld e, a
+	add hl, de
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+	jp hl
+
+moveBoss::
+	ld hl, bossPos
+	ld a, [hl]
+	add d
+	ld [hli], a
+	ld a, [hl]
+	add e
+	ld [hli], a
+	ld hl, oamSrc + $18
+	ld b, $C
+.loop:
+	ld a, [hl]
+	add d
+	ld [hli], a
+	ld a, [hl]
+	add e
+	ld [hli], a
+	inc hl
+	inc hl
+	dec b
+	jr nz, .loop
+	ret

@@ -61,6 +61,8 @@ fireColumns::
 	ds $8
 score::
 	ds $2
+bossAnimationRegisters::
+	ds $1
 
 SECTION "AUDIO_REGISTERS_MIRROR", WRAM0[$C410]
 Channel1Mirror::

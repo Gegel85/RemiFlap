@@ -32,9 +32,13 @@ animateStageStart::
 	dec b
 	jr nz, .objPalLoop3
 
+	reset bossAnimationRegisters
+	reg bossPos, 60
+	reg bossPos + 1, 160
 	call showPlayer
+	call displayBoss
 
-	ld de, oamSrc + $14
+	ld de, oamSrc + $60
 	ld bc, $1C
 	ld hl, baseSpritesValues
 	call copyMemory
@@ -42,7 +46,7 @@ animateStageStart::
 	ld a, [currentStage]
 	ld b, a
 	add "1"
-	reg $C52E, a
+	reg oamSrc + $7A, a
 
 	ld a, b
 	sla a
@@ -123,6 +127,12 @@ animateStageStart::
 	jr z, .loop
 	res 7, [hl]
 
+	push bc
+	push de
+	call stageAnimation
+	pop de
+	pop bc
+
 	ld a, 16
 	cp c
 	jr z, .next
@@ -156,7 +166,7 @@ animateStageStart::
 	ld e, 60
 	ld c, 8
 .next::
-	ld hl, oamSrc + $15
+	ld hl, oamSrc + $61
 	ld a, 60
 	cp [hl]
 	jr z, .noUpdate
@@ -178,8 +188,21 @@ animateStageStart::
 	dec e
 	jr nz, .loop
 
+finishAnim::
+	ld de, $C560
+	ld bc, 7 * 8
+	xor a
+	call fillMemory
 
-.finishAnim::
+	ld hl, VBLANKRegister
+.loop::
+	halt
+	bit 7, [hl]
+	jr z, .loop
+	res 7, [hl]
+	ld hl, cgbObjPalIndex
+	ld a, $98
+	ld [hli], a
 	ld de, firePal
 	ld b, $8
 .objPalLoop2::
@@ -188,8 +211,3 @@ animateStageStart::
 	ld [hl], a
 	dec b
 	jr nz, .objPalLoop2
-
-	ld de, $C500
-	ld bc, $A0
-	xor a
-	call fillMemory
