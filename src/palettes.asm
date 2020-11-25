@@ -15,3 +15,8 @@ firePal::
 	dw $1CE7, $00C7, $0067, $0007
 mainMenuBgPal::
 	incbin "assets/main_menu.pal"
+
+rumiaPal::
+	incbin "assets/rumia/rumia.pal"
+	incbin "assets/rumia/rumia_hair.pal"
+	incbin "assets/rumia/shadow.pal"

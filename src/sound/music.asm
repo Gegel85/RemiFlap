@@ -26,9 +26,10 @@ startMusic::
 	writeRegisterI a
 	writeRegisterI a
 	writeRegisterI a
-
-	reset nbRepeated
 	pop hl
+
+.noSetupSound::
+	reset nbRepeated
 
 	push de
 	; Setup timer

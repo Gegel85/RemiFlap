@@ -69,7 +69,6 @@ showPlayer::
 	ld d, a
 
 	ld a, [$FFFC]
-	add (backgroundMap - background - $1000) / $10
 	ld [$FFFB], a
 	ld b, 8
 .loop:

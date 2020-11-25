@@ -93,7 +93,7 @@ drawFireColumn::
 	ld e, $20 - 1
 	xor a
 	or c
-	ld a, ((backgroundMap - background - $1000) + (fireSprite1 - remiliaSprite)) / $10 + 1
+	ld a, $81
 	jr z, .loopBank0SkipMiddle
 	dec c
 	jr z, .loopBank0SkipTop
@@ -107,7 +107,7 @@ drawFireColumn::
 	jr nz, .loopBank0
 
 .loopBank0SkipTop::
-	ld a, ((backgroundMap - background - $1000) + (fireSprite1 - remiliaSprite)) / $10
+	ld a, $80
 	ld [hli], a
 	ld [hl], a
 	add hl, de
@@ -172,7 +172,7 @@ drawScore::
 	swap a
 .noSwap::
 	and $F
-	add $97
+	add $82
 	ld [hli], a
 	ld a, 3
 	ld [hli], a

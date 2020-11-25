@@ -47,9 +47,9 @@ vblank_interrupt::
 
 .changeAnimation::
 	inc l
-	ld [hl], ((backgroundMap - background - $1000) + (fireSprite1 - remiliaSprite) + vramStart) >> 8
+	ld [hl], ($800 + vramStart) >> 8
 	inc l
-	ld [hl], ((backgroundMap - background - $1000) + (fireSprite1 - remiliaSprite) + vramStart) & $FF
+	ld [hl], ($800 + vramStart) & $FF
 	inc l
 	ld [hl], $0B
 

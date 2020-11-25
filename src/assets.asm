@@ -33,6 +33,12 @@ fireSprite2::
 	incbin "assets/fire2.cfx"
 numbers2::
 	incbin "assets/numbers2.cfx"
+
+rumia::
+	incbin "assets/rumia/rumia.cfx"
+	incbin "assets/rumia/rumia_hair.cfx"
+	incbin "assets/rumia/shadow.cfx"
+
 font::
 	incbin "assets/font.zfx"
 
@@ -41,7 +47,7 @@ noCGBScreen::
 noCGBScreenMap::
 	incbin "assets/nocgberror.tilemap"
 
-SECTION "Bg", ROMX[$56B0], BANK[1]
+SECTION "Bg", ROMX[$5750], BANK[1]
 background::
 	incbin "assets/background.cfx"
 backgroundMap::

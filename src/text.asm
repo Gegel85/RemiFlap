@@ -10,3 +10,6 @@ difficulties::
 	db 0, "Hard", 0
 	db "  Normal  "
 	db 0, "Easy", 0
+
+stageText::
+	db "Stage "

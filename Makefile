@@ -50,6 +50,9 @@ COLORED_IMGS = \
 	assets/remi70d/remi_hat.png \
 	assets/remi70d/remi_wing.png \
 	assets/remi70d/remilia.png \
+	assets/rumia/rumia.png \
+	assets/rumia/rumia_hair.png \
+	assets/rumia/shadow.png \
 	assets/background.png \
 	assets/fire1.png \
 	assets/fire2.png \

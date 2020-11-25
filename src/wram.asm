@@ -38,6 +38,12 @@ fireColumnHoleSize::
 VBLANKRegister::
 	ds $1
 
+currentStage::
+	ds $1
+
+bossPos::
+	ds $2
+
 mainMenuArrowAnimationCounter::
 playerPos::
 	ds $1

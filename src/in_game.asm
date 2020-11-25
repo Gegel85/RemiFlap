@@ -4,18 +4,32 @@ game::
 	reset lcdCtrl
 
 	reg VRAMBankSelect, 1
-	startGPDMA background, vramStart, $800
+	startGPDMA background, vramStart + $1000, $800
 	startGPDMA background + $800, vramStart + $800, $800
 
 	reset VRAMBankSelect
-	startGPDMA background + $1000, vramStart, backgroundMap - background - $1000
-	startGPDMA remiliaSprite, vramStart + backgroundMap - background - $1000, $200
+	startGPDMA background + $1000, vramStart + $1000, backgroundMap - background - $1000
+	startGPDMA remiliaSprite, vramStart, $200
+
+	ld de, vramStart + "A" * $10
+	ld hl, font
+	ld a, 3
+	ld bc, 8 * 26
+	call uncompress
+
+	ld de, vramStart + "0" * $10
+	ld bc, 8 * 10
+	call uncompress
+
+	ld de, vramStart + "a" * $10
+	ld bc, 8 * 30
+	call uncompress
 
 	ld hl, cgbBgPalIndex
 	ld a, $80
 	ld [hli], a
 	ld de, backgroundPal
-	ld b, $18
+	ld b, $8
 .bgPalLoop::
 	ld a, [de]
 	inc de
@@ -34,15 +48,6 @@ game::
 	ld [hl], a
 	dec b
 	jr nz, .objPalLoop
-
-	ld de, firePal
-	ld b, $8
-.objPalLoop2::
-	ld a, [de]
-	inc de
-	ld [hl], a
-	dec b
-	jr nz, .objPalLoop2
 
 initGame::
 	di
@@ -79,8 +84,9 @@ initGame::
 
 	ld b, $30
 	push bc
-	reg lcdCtrl, %10010011
-	ei
+
+include "src/stageStartAnimation.asm"
+
 gameLoop::
 	reset interruptFlag
 	ld hl, VBLANKRegister

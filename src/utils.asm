@@ -52,6 +52,13 @@ uncompress::
 	ld [hli], a
 	nop
 	jr .endCase
+.case3:
+	pop hl
+	ld a, $FF
+	ld [hli], a
+	ld a, [de]
+	ld [hli], a
+	jr .endCase
 .endCase:
 
 	inc de

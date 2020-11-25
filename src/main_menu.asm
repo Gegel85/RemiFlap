@@ -19,14 +19,18 @@ mainMenu::
 	reset VRAMBankSelect
 	startGPDMA mainMenuBg, vramStart, mainMenuBgMap - mainMenuBg
 
-	ld de, vramStart + $41 * $10
+	ld de, vramStart + "A" * $10
 	ld hl, font
-	ld bc, 8 * 26
 	ld a, 2
+	ld bc, 8 * 26
 	call uncompress
 
-	ld de, vramStart + $61 * $10
-	ld bc, 8 * 29
+	ld de, vramStart + "0" * $10
+	ld bc, 8 * 10
+	call uncompress
+
+	ld de, vramStart + "a" * $10
+	ld bc, 8 * 30
 	call uncompress
 
 	ld de, mainMenuBgMap
