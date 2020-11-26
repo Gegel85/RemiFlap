@@ -63,6 +63,20 @@ score::
 	ds $2
 bossAnimationRegisters::
 	ds $1
+bossHp::
+	ds $1
+bossHpDrainCounter::
+	ds $1
+bossHpDrainCounterMax::
+	ds $1
+bossAttackCounter::
+	ds $1
+bossAttack::
+	ds $1
+bossAttackAnimCounter::
+	ds $1
+rumiaTotalMoveY::
+	ds $1
 
 SECTION "AUDIO_REGISTERS_MIRROR", WRAM0[$C410]
 Channel1Mirror::

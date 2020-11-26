@@ -12,6 +12,9 @@ game::
 	startGPDMA remiliaSprite, vramStart, $200
 
 	reset currentStage
+	ld a, [fireColumnHoleSize]
+	dec a
+	ld [bossHpDrainCounterMax], a
 
 	ld de, vramStart + "A" * $10
 	ld hl, font
@@ -111,6 +114,7 @@ initGame::
 
 include "src/stageStartAnimation.asm"
 
+;	jp bossFight
 gameLoop::
 	reset interruptFlag
 	ld hl, VBLANKRegister
@@ -236,7 +240,7 @@ gameLoop::
 	ld [hl], a
 	pop hl
 	or d
-	jr z, bossFight
+	jp z, bossFight
 .noScoreUpdate::
 	ld a, $F
 	cp [hl]
@@ -244,7 +248,7 @@ gameLoop::
 	jr c, .noCollision
 	ld a, [hl]
 	cp c
-	jr nc, gameOver
+	jp nc, gameOver
 	push bc
 	ld b, a
 	ld a, [fireColumnHoleSize]
@@ -264,9 +268,122 @@ gameLoop::
 	jp gameLoop
 
 
+bossFightFlandre::
+	ret
+
+include "src/boss_fights/rumia.asm"
+
+bossFightCallbacks::
+	dw bossFightRumia
+	dw bossFightFlandre
+
 bossFight::
+	reg bossPos, 60
+	reg bossPos + 1, 160
+	reg bossAttack, -1
+	reg bossAttackCounter, 1
+	reg bossHp, $FF
+	call displayBoss
+	reset bossAnimationRegisters
+	ld hl, bossHpDrainCounterMax
+	ld a, [hl]
+	inc a
+	ld [hld], a
+	ld [hl], a
+
+	call copyBgTilemap
+	ld hl, bossFightCallbacks
+	ld a, [currentStage]
+	and 1
+	sla a
+	ld e, a
+	ld d, 0
+	add hl, de
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+	push hl
+
+bossFightLoop::
+	reset interruptFlag
+	ld hl, VBLANKRegister
+.loop::
+	halt
+	bit 7, [hl]
+	jr z, .loop
+	res 7, [hl]
+
+	ld hl, bgScrollX
+	inc [hl]
+
+	ld hl, playerSpeed
+	ld a, [hl]
+	pop de
+	pop bc
+	dec b
+	push bc
+	push de
+	jr nz, .noInc
+
+	pop de
+	pop bc
+	ld b, GRAVITY_COUNTER
+	push bc
+	push de
+	inc [hl]
+.noInc::
+	dec l
+	add [hl]
+	ld [hl], a
+
+	ld a, [playerPos]
+	cp 144
+	jp nc, gameOver
+
+.playerControl::
+	call getKeysFiltered
+	bit A_BIT, a
+	jr z, .jump
+	bit UP_BIT, a
+	jr nz, .noJump
+.jump::
+	call random
+	ld a, [playerSpeed]
+	ld b, a
+	srl a
+	sub SPEED_FORCE
+	bit 7, b
+	jr z, .ok
+	set 7, a
+.ok::
+	ld [playerSpeed], a
+	pop de
+	pop bc
+	ld b, GRAVITY_COUNTER
+	push bc
+	push de
+.noJump::
+	call showPlayer
+
+	ld hl, bossHpDrainCounter
+	dec [hl]
+	jr nz, .noDec
+
+	inc hl
+	ld a, [hld]
+	ld [hld], a
+	dec [hl]
+	jr z, .finish
+
+.noDec::
+	pop hl
+	push hl
+	ld de, bossFightLoop
+	push de
+	jp hl
 
 .finish::
+	pop hl
 	ld hl, currentStage
 	inc [hl]
 	jp initGame
