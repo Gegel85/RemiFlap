@@ -53,6 +53,7 @@ COLORED_IMGS = \
 	assets/rumia/rumia.png \
 	assets/rumia/rumia_hair.png \
 	assets/rumia/shadow.png \
+	assets/rumia/projectile.png \
 	assets/background.png \
 	assets/fire1.png \
 	assets/fire2.png \

@@ -77,6 +77,12 @@ bossAttackAnimCounter::
 	ds $1
 rumiaTotalMoveY::
 	ds $1
+nbOfProjectilesToShoot::
+	ds $1
+nbOfProjectiles::
+	ds $1
+projectiles::
+	ds $40
 
 SECTION "AUDIO_REGISTERS_MIRROR", WRAM0[$C410]
 Channel1Mirror::

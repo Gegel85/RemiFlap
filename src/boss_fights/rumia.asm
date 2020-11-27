@@ -68,6 +68,7 @@ rumiaAttack1::
 .startWandering::
 	call random
 	and %11111110
+	ld a, 0
 	cp $B0
 	jr nc, .fine
 	cp 45
@@ -108,6 +109,15 @@ rumiaAttack1::
 	jr nc, .noCollision
 	cp $08
 	jr c, .noCollision
+	ld a, [bossPos]
+	add $18
+	ld b, a
+	ld a, [playerPos]
+	cp b
+	jr nc, .noCollision
+	add $18
+	cp b
+	jp nc, gameOver
 
 .noCollision::
 	ld a, b

@@ -38,6 +38,7 @@ rumia::
 	incbin "assets/rumia/rumia.cfx"
 	incbin "assets/rumia/rumia_hair.cfx"
 	incbin "assets/rumia/shadow.cfx"
+	incbin "assets/rumia/projectile.cfx"
 
 font::
 	incbin "assets/font.zfx"
@@ -47,7 +48,7 @@ noCGBScreen::
 noCGBScreenMap::
 	incbin "assets/nocgberror.tilemap"
 
-SECTION "Bg", ROMX[$5750], BANK[1]
+SECTION "Bg", ROMX[$5760], BANK[1]
 background::
 	incbin "assets/background.cfx"
 backgroundMap::
