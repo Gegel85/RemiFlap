@@ -68,7 +68,6 @@ rumiaAttack1::
 .startWandering::
 	call random
 	and %11111110
-	ld a, 0
 	cp $B0
 	jr nc, .fine
 	cp 45
@@ -137,7 +136,7 @@ rumiaAttack1::
 	ld de, $00FE
 	call moveBoss
 	ld a, [bossPos + 1]
-	cp 100
+	cp 120
 	ret nz
 	jr .endAnimation
 .chargeMist::
@@ -160,8 +159,287 @@ rumiaAttack1::
 	inc [hl]
 	ret
 
+projectilesAngles::
+	dw $FF00, $0101
+	dw $FE00, $0201
+	dw $FE00, $0101
+	dw $FD00, $0201
+	dw $FD00, $0101
+	dw $FC00, $0201
+	dw $FC00, $0101
+	dw $FB00, $0201
+
+	dw $FE01, $0201
+	dw $FE01, $0101
+	dw $FEFF, $0201
+	dw $FEFF, $0101
+	dw $FD01, $0201
+	dw $FD01, $0101
+	dw $FDFF, $0201
+	dw $FDFF, $0101
+
+	dw $FE02, $0202
+	dw $FE02, $0102
+	dw $FEFE, $0202
+	dw $FEFE, $0102
+	dw $FD02, $0202
+	dw $FD02, $0102
+	dw $FDFE, $0202
+	dw $FDFE, $0102
+
+	dw $FE02, $0201
+	dw $FE02, $0101
+	dw $FEFE, $0201
+	dw $FEFE, $0101
+	dw $FD02, $0201
+	dw $FD02, $0101
+	dw $FDFE, $0201
+	dw $FDFE, $0101
+
+
 rumiaAttack2::
+	xor a
+	inc hl
+	or [hl]
+	jp z, .prepareProjectileSpawn
+	dec a
+	jp z, .throwProjectiles
+
+	xor a
+	ld de, oamSrc + $80
+	ld bc, $20
+	call fillMemory
 	jp bossFightRumia.endOfAttack
+.throwProjectiles::
+	ld hl, nbOfProjectilesToShoot
+	xor a
+	or [hl]
+	jr nz, .check
+
+	ld a, [nbOfProjectiles]
+	or a
+	jr nz, .updateProjectiles
+	jp rumiaAttack1.endAnimation
+
+.check::
+	inc hl
+	bit 3, [hl]
+	jr nz, .updateProjectiles
+
+	inc hl
+	dec [hl]
+	jr nz, .updateProjectiles
+
+	ld a, [nbOfProjectilesToShoot]
+	dec a
+	ld [nbOfProjectilesToShoot], a
+
+	call random
+	and $7
+	set 3, a
+	ld [hld], a
+	ld a, [hl]
+	inc [hl]
+	inc hl
+	inc hl
+	sla a
+	sla a
+	sla a
+	ld b, 0
+	ld c, a
+	add hl, bc
+
+	call random
+	and %01111100
+	push hl
+	ld c, a
+	ld hl, projectilesAngles
+	add hl, bc
+	ld b, h
+	ld c, l
+	pop hl
+	ld a, [bc]
+	inc bc
+	ld [hli], a
+	ld a, [bc]
+	inc bc
+	ld [hli], a
+	ld a, [bc]
+	inc bc
+	ld d, a
+	ld [hli], a
+	ld a, [bc]
+	inc bc
+	ld e, a
+	ld [hli], a
+	ld a, d
+	ld [hli], a
+	ld a, e
+	ld [hli], a
+	ld a, [bossPos]
+	add $C
+	ld [hli], a
+	ld a, [bossPos + 1]
+	add $C
+	ld [hli], a
+
+.updateProjectiles::
+	ld a, [nbOfProjectiles]
+	or a
+	ret z
+	ld d, a
+	ld hl, projectiles
+.updateLoop::
+	; SPEED
+	ld a, [hli]
+	ld b, a
+	ld a, [hli]
+	ld c, a
+
+	; COUNTER
+	dec [hl]
+	inc hl
+	jr z, .noDecY
+	dec b
+	jr .checkX
+.noDecY::
+	inc hl
+	ld a, [hld]
+	dec hl
+	ld [hli], a
+.checkX::
+	dec [hl]
+	inc hl
+	jr z, .noDecX
+	dec c
+	jr .applySpeed
+.noDecX::
+	inc hl
+	ld a, [hld]
+	dec hl
+	ld [hli], a
+.applySpeed::
+	inc hl
+	inc hl
+	ld a, b
+	add [hl]
+	ld b, a
+	ld [hli], a
+	ld a, c
+	add [hl]
+	ld c, a
+	ld [hli], a
+
+	ld a, 144
+	cp b
+	jr c, .delete
+	ld a, 160
+	cp c
+	jr nc, .noDelete
+
+.delete::
+	ld a, [nbOfProjectiles]
+	dec a
+	push af
+	ld [nbOfProjectiles], a
+
+	ld a, d
+	dec a
+	push de
+	sla a
+	sla a
+	sla a
+	ld b, 0
+	ld c, a
+	push hl
+	ld de, -8
+	add hl, de
+	ld d, h
+	ld e, l
+	pop hl
+	push de
+	call copyMemory
+	pop hl
+	pop de
+	pop af
+	ret z
+
+.noDelete::
+	ld a, $20
+	cp c
+	jr nc, .noCollision
+	ld a, $28
+	cp c
+	jr c, .noCollision
+	ld a, [playerPos]
+	sub b
+	bit 7, a
+	jr .pos
+	cpl
+	inc a
+.pos::
+	cp 4
+	jr nc, .noCollision
+	reg gotHit, 1
+
+.noCollision::
+	dec d
+	jr nz, .updateLoop
+
+.drawProjectiles::
+	xor a
+	ld de, oamSrc + $80
+	ld bc, $20
+	call fillMemory
+	ld a, [nbOfProjectiles]
+	ld b, a
+	ld hl, oamSrc + $80
+	ld de, projectiles
+.displayLoop::
+	; SPEED
+	inc de
+	inc de
+	; COUNTER
+	inc de
+	inc de
+	; MAX COUNTER
+	inc de
+	inc de
+	; POS
+	ld a, [de]
+	inc de
+	add $C
+	ld [hli], a
+
+	ld a, [de]
+	inc de
+	add 4
+	ld [hli], a
+
+	ld a, $27
+	ld [hli], a
+	ld a, 6
+	ld [hli], a
+	dec b
+	jr nz, .displayLoop
+	ld a, [gotHit]
+	or a
+	ld a, 0
+	ld [gotHit], a
+	jp nz, gameOver
+	ret
+
+.prepareProjectileSpawn::
+	call random
+	and $0F
+	inc a
+	ld [nbOfProjectilesToShoot], a
+	reset nbOfProjectiles
+	call random
+	and $7
+	inc a
+	ld [shootCounter], a
+	jp rumiaAttack1.endAnimation
 
 bossFightRumia::
 	ld hl, bossAttackCounter
@@ -188,8 +466,10 @@ bossFightRumia::
 .alreadyAttacking::
 	cp $FF
 	jp z, rumiaEnteringScene
-	bit 0, a
-	jp nz, rumiaAttack1
+	dec a
+	jp z, rumiaAttack1
+	dec a
+	jp z, rumiaAttack2
 
 .endOfAttack::
 	call random

@@ -114,7 +114,7 @@ initGame::
 
 include "src/stageStartAnimation.asm"
 
-;	jp bossFight
+	jp bossFight
 gameLoop::
 	reset interruptFlag
 	ld hl, VBLANKRegister
@@ -278,7 +278,7 @@ bossFightCallbacks::
 	dw bossFightFlandre
 
 bossFight::
-	reg bossPos, 60
+	reg bossPos, 70
 	reg bossPos + 1, 160
 	reg bossAttack, -1
 	reg bossAttackCounter, 1

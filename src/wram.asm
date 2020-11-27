@@ -81,8 +81,12 @@ nbOfProjectilesToShoot::
 	ds $1
 nbOfProjectiles::
 	ds $1
+shootCounter::
+	ds $1
 projectiles::
-	ds $40
+	ds $8 * 8
+gotHit::
+	ds $1
 
 SECTION "AUDIO_REGISTERS_MIRROR", WRAM0[$C410]
 Channel1Mirror::

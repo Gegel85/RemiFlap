@@ -36,6 +36,11 @@ animateStageStart::
 	dec b
 	jr nz, .objPalLoop3
 
+	ld de, oamSrc
+	ld bc, $A0
+	xor a
+	call fillMemory
+
 	reset bossAnimationRegisters
 	reg bossPos, 60
 	reg bossPos + 1, 160
