@@ -24,7 +24,7 @@ updateSfx::
 	set 1, [hl]
 
 	ld d, $FF
-	ld h, $CD
+	ld h, Channel1Mirror >> 8
 	ld e, c
 	ld l, c
 	ld b, a

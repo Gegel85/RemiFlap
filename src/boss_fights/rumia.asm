@@ -1,4 +1,12 @@
 animateRumia::
+	or a
+	jr nz, .noPlay
+	push hl
+	ld hl, takeMistSfx
+	call playSfx
+	pop hl
+.noPlay::
+
 	bit 5, a
 	jr z, .flash3
 
@@ -153,7 +161,11 @@ rumiaAttack1::
 	ld hl, bossAttackAnimCounter
 	jr .nextAnimaton
 .startMistCharge::
+	push hl
+	ld hl, putMistSfx
+	call playSfx
 	ld a, $40
+	pop hl
 	ld [bossAnimationRegisters], a
 .nextAnimaton::
 	inc [hl]
@@ -196,6 +208,18 @@ projectilesAngles::
 	dw $FDFE, $0201
 	dw $FDFE, $0101
 
+putMistSfx::
+	db 3		      ; Channel (0-3)
+	db $20		      ; Sound duration in frames
+	db $3F, $5A, $50, $C0 ; Sound data copied in channel registers
+takeMistSfx::
+	db 3		      ; Channel (0-3)
+	db $20		      ; Sound duration in frames
+	db $3F, $F3, $50, $80 ; Sound data copied in channel registers
+shootSfx::
+	db 3		      ; Channel (0-3)
+	db $20		      ; Sound duration in frames
+	db $38, $F1, $78, $80 ; Sound data copied in channel registers
 
 rumiaAttack2::
 	xor a
@@ -230,6 +254,7 @@ rumiaAttack2::
 	dec [hl]
 	jr nz, .updateProjectiles
 
+.addNewProjectile::
 	ld a, [nbOfProjectilesToShoot]
 	dec a
 	ld [nbOfProjectilesToShoot], a
@@ -282,6 +307,9 @@ rumiaAttack2::
 	ld a, [bossPos + 1]
 	add $C
 	ld [hli], a
+
+	ld hl, shootSfx
+	call playSfx
 
 .updateProjectiles::
 	ld a, [nbOfProjectiles]

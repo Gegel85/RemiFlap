@@ -281,6 +281,13 @@ stageAnimationRumia::
 
 	ld a, [hl]
 	inc [hl]
+	or a
+	jr nz, .noPlay
+	push hl
+	ld hl, takeMistSfx
+	call playSfx
+	pop hl
+.noPlay::
 
 	bit 5, a
 	jr z, .flash3
