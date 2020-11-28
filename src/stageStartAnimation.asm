@@ -7,8 +7,8 @@ bossesAssets::
 	dw darkFirePal
 	dw RumiaTheme
 	; Stage 2, 4, 6, 8, 10, ...
-	dw $0000
-	dw $0000
+	dw flandre
+	dw flandrePal
 	dw firePal
 	dw FlandreTheme
 
@@ -126,6 +126,14 @@ animateStageStart::
 	ld l, a
 	push hl
 
+	ld a, 1
+	ld [VRAMBankSelect], a
+	startGPDMA VRAMBg1Mirror, VRAMBgStart, $240
+
+	xor a
+	ld [VRAMBankSelect], a
+	startGPDMA VRAMBgMirror, VRAMBgStart, $240
+
 	reg lcdCtrl, %11000011
 	ei
 	ld b, 16
@@ -199,8 +207,8 @@ animateStageStart::
 	jr nz, .loop
 
 finishAnim::
-	ld de, $C560
-	ld bc, 7 * 8
+	ld de, oamSrc + $1C
+	ld bc, $A0 - $1C
 	xor a
 	call fillMemory
 

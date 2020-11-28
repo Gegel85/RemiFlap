@@ -209,23 +209,24 @@ bossesSprites::
 	db $14, $10, $20, $04
 	db $1C, $10, $21, $04
 	db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	db $10, $08, $00, $00
-	db $10, $08, $00, $00
-	db $10, $08, $00, $00
-	db $10, $08, $00, $00
-	db $10, $08, $00, $00
-	db $10, $08, $00, $00
-	db $10, $08, $00, $00
-	db $10, $08, $00, $00
-	db $10, $08, $00, $00
-	db $10, $08, $00, $00
-	db $10, $08, $00, $00
-	db $10, $08, $00, $00
+	db $10, $08, $20, $04
+	db $10, $10, $21, $04
+	db $18, $08, $22, $04
+	db $18, $10, $23, $04
+	db $20, $08, $24, $04
+	db $20, $10, $25, $04
+	db $18, $0E, $26, $05
+	db $1C, $16, $29, $07
+	db $1F, $0D, $27, $07
+	db $10, $08, $06, $00
+	db $10, $08, $06, $00
+	db $10, $08, $06, $00
 	db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 
 displayBoss::
 	ld a, [currentStage]
 	and 1
+	sla a
 	sla a
 	sla a
 	sla a
@@ -343,7 +344,158 @@ stageAnimationRumia::
 	xor a
 	jp fillMemory
 
+flanPos2::
+	db $13, $08, $27, $07
+	db $1B, $08, $28, $07
+
 stageAnimationFlandre::
+	ld hl, bossAnimationRegisters
+	ld a, [hl]
+	or a
+	jp z, .arrive
+	dec a
+	jp z, .delay
+	dec a
+	jr z, .changeFlanPos
+	dec a
+	jp z, .delay
+	dec a
+	jr z, .changeLeavateinnPalette
+
+	bit 0, a
+	jp nz, .delay
+
+	cp $A
+	jr c, .updateSprite
+
+	sub $A
+	jr z, .wait
+
+	dec a
+	dec a
+	jr z, .goAway
+
+	ret
+
+.updateSprite::
+	inc [hl]
+	inc hl
+	ld [hl], $18
+	sla a
+	sla a
+	sla a
+	sla a
+	ld c, a
+	ld b, 0
+	ld hl, altLaevateinns
+	add hl, bc
+	ld b, h
+	ld c, l
+
+	ld hl, newDmaSrcH
+	ld [hl], b
+	inc l
+	ld [hl], c
+	inc l
+	ld [hl], $82
+	inc l
+	ld [hl], $70
+	inc l
+	ld [hl], $01
+	ret
+
+.goAway::
+	ld de, $0004
+	call moveBoss
+	ld a, [bossPos + 1]
+	cp 160
+	ret nz
+	inc [hl]
+	ret
+
+.wait::
+	inc hl
+	inc [hl]
+	bit 6, [hl]
+	ret z
+	xor a
+	ld [hld], a
+	inc [hl]
+	ret
+
+.changeLeavateinnPalette::
+	inc [hl]
+	inc hl
+	ld [hl], $18
+	ld hl, oamSrc + $3F
+	ld a, 6
+	ld [hli], a
+	inc hl
+	inc hl
+	inc hl
+	ld [hli], a
+	ret
+
+.changeFlanPos::
+	inc [hl]
+	inc hl
+	ld [hl], $10
+	startGPDMA altFlanPos, $8220, 7 * $10
+	ld hl, flanPos2
+	ld de, oamSrc + $3C
+	ld a, [bossPos]
+	ld b, a
+	ld a, [bossPos + 1]
+	ld c, a
+
+	ld a, [hli]
+	add b
+	ld [de], a
+	inc de
+	ld a, [hli]
+	add c
+	ld [de], a
+	inc de
+	ld a, [hli]
+	ld [de], a
+	inc de
+	ld a, [hli]
+	ld [de], a
+	inc de
+	ld a, [hli]
+	add b
+	ld [de], a
+	inc de
+	ld a, [hli]
+	add c
+	ld [de], a
+	inc de
+	ld a, [hli]
+	ld [de], a
+	inc de
+	ld a, [hli]
+	ld [de], a
+	inc de
+	ret
+
+.arrive::
+	ld de, $01FE
+	call moveBoss
+	ld a, [bossPos + 1]
+	cp 120
+	ret nz
+	ld hl, bossAnimationRegisters
+	inc [hl]
+	ret
+
+.delay::
+	inc hl
+	inc [hl]
+	bit 5, [hl]
+	ret z
+	xor a
+	ld [hld], a
+	inc [hl]
 	ret
 
 stageAnimationTable::

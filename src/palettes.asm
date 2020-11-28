@@ -20,3 +20,9 @@ rumiaPal::
 	incbin "assets/rumia/rumia.pal"
 	incbin "assets/rumia/rumia_hair.pal"
 	incbin "assets/rumia/shadow.pal"
+
+flandrePal::
+	incbin "assets/flandre/flandre1.pal"
+	incbin "assets/flandre/hair_wings1.pal"
+	incbin "assets/flandre/laevateinn6.pal"
+	incbin "assets/flandre/wing1.pal"

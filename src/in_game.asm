@@ -15,7 +15,8 @@ game::
 	reset ROMBankSelect
 	startGPDMA remiliaSprite, VRAMStart, $200
 
-	reset currentStage
+	;reset currentStage
+	reg currentStage, 1
 	ld a, [fireColumnHoleSize]
 	dec a
 	ld [bossHpDrainCounterMax], a
@@ -101,13 +102,13 @@ initGame::
 	ld bc, 4 * 4
 	call fillMemory
 
-	reg VBLANKRegister, 1
-
 	ld b, $30
 	push bc
+	reset VBLANKRegister
 
 include "src/stageStartAnimation.asm"
 
+	reg VBLANKRegister, 1
 ;	jp bossFight
 gameLoop::
 	reset interruptFlag

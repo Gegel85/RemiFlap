@@ -51,6 +51,23 @@ rumia::
 	incbin "assets/rumia/shadow.cfx"
 	incbin "assets/rumia/projectile.cfx"
 
+flandre::
+	incbin "assets/flandre/flandre1.cfx"
+	incbin "assets/flandre/hair_wings1.cfx"
+	incbin "assets/flandre/laevateinn1.cfx"
+	ds $10
+	incbin "assets/flandre/wing1.cfx"
+altFlanPos::
+	incbin "assets/flandre/flandre2.cfx"
+	incbin "assets/flandre/hair_wings2.cfx"
+
+altLaevateinns::
+	incbin "assets/flandre/laevateinn2.cfx"
+	incbin "assets/flandre/laevateinn3.cfx"
+	incbin "assets/flandre/laevateinn4.cfx"
+	incbin "assets/flandre/laevateinn5.cfx"
+	incbin "assets/flandre/laevateinn6.cfx"
+
 font::
 	incbin "assets/font.zfx"
 

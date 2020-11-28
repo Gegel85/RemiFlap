@@ -62,7 +62,7 @@ fireColumns::
 score::
 	ds $2
 bossAnimationRegisters::
-	ds $1
+	ds $2
 bossHp::
 	ds $1
 bossHpDrainCounter::
