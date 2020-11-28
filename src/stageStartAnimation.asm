@@ -6,10 +6,11 @@ bossesAssets::
 	dw rumiaPal
 	dw darkFirePal
 	dw RumiaTheme
-	dw remiliaSprite
-	dw remiliaPal
+	; Stage 2, 4, 6, 8, 10, ...
+	dw $0000
+	dw $0000
 	dw firePal
-	dw RemiliaTheme
+	dw FlandreTheme
 
 baseSpritesValues::
 	db $55, $A8, "S", 3

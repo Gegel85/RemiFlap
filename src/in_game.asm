@@ -114,7 +114,7 @@ initGame::
 
 include "src/stageStartAnimation.asm"
 
-	jp bossFight
+;	jp bossFight
 gameLoop::
 	reset interruptFlag
 	ld hl, VBLANKRegister

@@ -95,6 +95,7 @@ playRaw: MACRO
 ENDM
 
 setFrequency: MACRO ; setFrequency(byte frequency)
+	ASSERT (2048 - 131072 / (\1)) > 0
 	db SET_FREQU
 	dw (2048 - 131072 / (\1)) | ((\2)) << 8
 ENDM
