@@ -26,7 +26,7 @@ animateRumia::
 	and 1
 	jp z, displayBoss
 .hideMist::
-	ld hl, oamSrc + $18
+	ld hl, oamSrc + $1C
 	ld b, 9
 	xor a
 .loop:

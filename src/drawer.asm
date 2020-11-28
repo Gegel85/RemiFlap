@@ -235,7 +235,7 @@ displayBoss::
 	ld d, 0
 	ld e, a
 	add hl, de
-	ld de, oamSrc + $18
+	ld de, oamSrc + $1C
 	ld b, $C
 .loop::
 	ld a, [bossPos]
@@ -311,7 +311,7 @@ stageAnimationRumia::
 	and 1
 	jr z, displayBoss
 .hideMist::
-	ld hl, oamSrc + $18
+	ld hl, oamSrc + $1C
 	ld b, 9
 	xor a
 .loop:
@@ -338,7 +338,7 @@ stageAnimationRumia::
 	ld de, $0002
 	jp moveBoss
 .hideBoss::
-	ld de, oamSrc + $18
+	ld de, oamSrc + $1C
 	ld bc, $30
 	xor a
 	jp fillMemory
@@ -371,7 +371,7 @@ moveBoss::
 	ld a, [hl]
 	add e
 	ld [hli], a
-	ld hl, oamSrc + $18
+	ld hl, oamSrc + $1C
 	ld b, $C
 .loop:
 	ld a, [hl]

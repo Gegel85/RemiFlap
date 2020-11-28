@@ -62,16 +62,6 @@ initGame::
 	reset playerSpeed
 	ld [bgScrollX], a
 
-	ld a, [fireColumnHoleSize]
-	ld b, a
-	ld a, 7
-	sub b
-	sla a
-	sla a
-	sla a
-	sla a
-	ld b, a
-
 	ld c, 0
 	ld a, [currentStage]
 	sla a
@@ -83,7 +73,7 @@ initGame::
 	sla a
 	rl c
 
-	add b
+	add $20
 	ld [score], a
 	ld a, c
 	adc 0

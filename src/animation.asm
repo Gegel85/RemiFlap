@@ -7,18 +7,18 @@ remiliaSpritesParams::
 	ds $2
 	ds $2
 	ds $2
-	db $69, $00 ; incbin "assets/remim45d/remi_hat.cfx"
-	db $53, $02 ; incbin "assets/remim45d/remi_wing.cfx"
-	db $98, $00 ; incbin "assets/remim45d/remi_mouth.cfx"
-	db $00, $01 ; incbin "assets/remim45d/remilia.cfx"
+	db $69, $00 ; incbin "assets/remi45d/remi_hat.cfx"
+	db $53, $02 ; incbin "assets/remi45d/remi_wing.cfx"
+	db $98, $00 ; incbin "assets/remi45d/remi_mouth.cfx"
+	db $00, $01 ; incbin "assets/remi45d/remilia.cfx"
 	db $08, $01
 	db $80, $01
 	db $88, $01
 	ds $2
-	db $79, $00 ; incbin "assets/remim45d/remi_hat.cfx"
-	db $04, $02 ; incbin "assets/remim45d/remi_wing.cfx"
-	db $C6, $00 ; incbin "assets/remim45d/remi_mouth.cfx"
-	db $00, $01 ; incbin "assets/remim45d/remilia.cfx"
+	db $79, $00 ; incbin "assets/remi70d/remi_hat.cfx"
+	db $04, $02 ; incbin "assets/remi70d/remi_wing.cfx"
+	db $C6, $00 ; incbin "assets/remi70d/remi_mouth.cfx"
+	db $00, $01 ; incbin "assets/remi70d/remilia.cfx"
 	db $08, $01
 	db $80, $01
 	db $88, $01
@@ -70,7 +70,7 @@ showPlayer::
 
 	ld a, [$FFFC]
 	ld [$FFFB], a
-	ld b, 6
+	ld b, 7
 .loop:
 	ld a, [de]
 	push af
