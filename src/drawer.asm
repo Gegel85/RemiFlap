@@ -2,7 +2,7 @@ copyBgTilemap::
 	ld a, 1 << 3
 	ld [$FFFA], a
 	ld [$FFFB], a
-	ld hl, vramBgMirror
+	ld hl, VRAMBgMirror
 	ld de, backgroundMap
 .loop:
 	res 2, h

@@ -1,3 +1,14 @@
+SECTION "Bg", ROMX[$4000], BANK[2]
+background::
+	incbin "assets/background.cfx"
+mainMenuBg::
+	incbin "assets/main_menu.cfx"
+
+noCGBScreen::
+	incbin "assets/nocgberror.fx"
+noCGBScreenMap::
+	incbin "assets/nocgberror.tilemap"
+
 SECTION "Assets", ROMX[$4000], BANK[1]
 
 remiliaSprite::
@@ -43,18 +54,8 @@ rumia::
 font::
 	incbin "assets/font.zfx"
 
-noCGBScreen::
-	incbin "assets/nocgberror.fx"
-noCGBScreenMap::
-	incbin "assets/nocgberror.tilemap"
-
-SECTION "Bg", ROMX[$5760], BANK[1]
-background::
-	incbin "assets/background.cfx"
 backgroundMap::
 	incbin "assets/background.tilemap"
-mainMenuBg::
-	incbin "assets/main_menu.cfx"
 mainMenuBgMap::
 	incbin "assets/main_menu.tilemap"
 

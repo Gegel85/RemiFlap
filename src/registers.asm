@@ -1,7 +1,10 @@
+; MBC
+ROMBankSelect  = $2000
+
 ;VRAM
-vramStart      = $8000
-vramBgStart    = $9800
-vramWinStart   = $9C00
+VRAMStart      = $8000
+VRAMBgStart    = $9800
+VRAMWinStart   = $9C00
 
 ;Joypad
 joypad         = $FF00

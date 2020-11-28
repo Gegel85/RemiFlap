@@ -109,7 +109,7 @@ stackTop::
 stackBottom::
 
 SECTION "VRAM_MAP_SRC", WRAM0[$C800]
-vramBgMirror::
+VRAMBgMirror::
 	ds $400
-vramBg1Mirror::
+VRAMBg1Mirror::
 	ds $400

@@ -41,7 +41,7 @@ init::
 
 	xor a
 	ld bc, $6000
-	ld de, vramStart
+	ld de, VRAMStart
 	call fillMemory
 
 	ld bc, $10

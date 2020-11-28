@@ -4,29 +4,33 @@ game::
 	reset lcdCtrl
 
 	reg VRAMBankSelect, 1
-	startGPDMA background, vramStart + $1000, $800
-	startGPDMA background + $800, vramStart + $800, $800
+	inc a
+	ld [ROMBankSelect], a
+	startGPDMA background, VRAMStart + $1000, $800
+	startGPDMA background + $800, VRAMStart + $800, $800
 
 	reset VRAMBankSelect
-	startGPDMA background + $1000, vramStart + $1000, backgroundMap - background - $1000
-	startGPDMA remiliaSprite, vramStart, $200
+	startGPDMA background + $1000, VRAMStart + $1000, mainMenuBg - background - $1000
+
+	reset ROMBankSelect
+	startGPDMA remiliaSprite, VRAMStart, $200
 
 	reset currentStage
 	ld a, [fireColumnHoleSize]
 	dec a
 	ld [bossHpDrainCounterMax], a
 
-	ld de, vramStart + "A" * $10
+	ld de, VRAMStart + "A" * $10
 	ld hl, font
 	ld a, 3
 	ld bc, 8 * 26
 	call uncompress
 
-	ld de, vramStart + "0" * $10
+	ld de, VRAMStart + "0" * $10
 	ld bc, 8 * 10
 	call uncompress
 
-	ld de, vramStart + "a" * $10
+	ld de, VRAMStart + "a" * $10
 	ld bc, 8 * 30
 	call uncompress
 
@@ -81,7 +85,7 @@ initGame::
 	call copyBgTilemap
 
 	ld hl, fireColumnNextColumnAddr
-	ld a, vramBgMirror >> 8
+	ld a, VRAMBgMirror >> 8
 	ld [hli], a
 	xor a
 	ld [hli], a

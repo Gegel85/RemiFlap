@@ -47,9 +47,9 @@ vblank_interrupt::
 
 .changeAnimation::
 	inc l
-	ld [hl], ($800 + vramStart) >> 8
+	ld [hl], ($800 + VRAMStart) >> 8
 	inc l
-	ld [hl], ($800 + vramStart) & $FF
+	ld [hl], ($800 + VRAMStart) & $FF
 	inc l
 	ld [hl], $0B
 
@@ -60,11 +60,11 @@ vblank_interrupt::
 	jr z, .noCopy
 
 	ld [VRAMBankSelect], a
-	startGPDMA vramBg1Mirror, vramBgStart, $240
+	startGPDMA VRAMBg1Mirror, VRAMBgStart, $240
 
 	xor a
 	ld [VRAMBankSelect], a
-	startHDMA vramBgMirror, vramBgStart, $240
+	startHDMA VRAMBgMirror, VRAMBgStart, $240
 	ld hl, VBLANKRegister
 .noCopy::
 	set 7, [hl]

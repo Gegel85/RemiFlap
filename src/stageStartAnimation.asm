@@ -82,7 +82,7 @@ animateStageStart::
 	inc l
 	ld [hl], $00
 	inc l
-	ld [hl], $7
+	ld [hl], $F
 
 	pop hl
 	ld a, [hli]

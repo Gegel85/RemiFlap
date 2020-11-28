@@ -15,14 +15,15 @@ notCGB::
 	reset lcdCtrl
 	reg dmgBgPalData, $E4
 
+	reg ROMBankSelect, 2
 	ld hl, noCGBScreen
-	ld de, vramStart
+	ld de, VRAMStart
 	ld bc, noCGBScreenMap - noCGBScreen
 	call copyMemory
 
 	ld b, 18
 	push hl
-	ld hl, vramBgStart
+	ld hl, VRAMBgStart
 	pop de
 .loop:
 	ld c, 20

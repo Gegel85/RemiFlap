@@ -8,7 +8,7 @@ mainMenu::
 
 	reset VBLANKRegister
 	reg VRAMBankSelect, 1
-	ld de, vramBgStart
+	ld de, VRAMBgStart
 	xor a
 	ld [bgScrollX], a
 	ld bc, $800
@@ -16,25 +16,27 @@ mainMenu::
 
 	reg ARROW_LEFT_ADDR, 1 << 5
 
+	reg ROMBankSelect, 2
 	reset VRAMBankSelect
-	startGPDMA mainMenuBg, vramStart, mainMenuBgMap - mainMenuBg
+	startGPDMA mainMenuBg, VRAMStart, noCGBScreen - mainMenuBg
 
-	ld de, vramStart + "A" * $10
+	reset ROMBankSelect
+	ld de, VRAMStart + "A" * $10
 	ld hl, font
 	ld a, 2
 	ld bc, 8 * 26
 	call uncompress
 
-	ld de, vramStart + "0" * $10
+	ld de, VRAMStart + "0" * $10
 	ld bc, 8 * 10
 	call uncompress
 
-	ld de, vramStart + "a" * $10
+	ld de, VRAMStart + "a" * $10
 	ld bc, 8 * 30
 	call uncompress
 
 	ld de, mainMenuBgMap
-	ld hl, vramBgStart
+	ld hl, VRAMBgStart
 	ld b, 18
 .copyLoop:
 	ld c, 20
