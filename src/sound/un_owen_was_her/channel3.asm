@@ -1,4 +1,4 @@
-SECTION "Music", ROMX[$7500], BANK[1]
+
 
 musicChan3FlandreTheme::
 	setRegisters $80, $40, $40, $00, $00

@@ -56,15 +56,23 @@ COLORED_IMGS = \
 	assets/rumia/projectile.png \
 	assets/flandre/flandre1.png \
 	assets/flandre/flandre2.png \
+	assets/flandre/flandre3.png \
+	assets/flandre/flandre4.png \
 	assets/flandre/hair_wings1.png \
 	assets/flandre/hair_wings2.png \
+	assets/flandre/hair_wings3.png \
+	assets/flandre/hair_wings4.png \
 	assets/flandre/laevateinn1.png \
 	assets/flandre/laevateinn2.png \
 	assets/flandre/laevateinn3.png \
 	assets/flandre/laevateinn4.png \
 	assets/flandre/laevateinn5.png \
 	assets/flandre/laevateinn6.png \
+	assets/flandre/laevateinn7.png \
 	assets/flandre/wing1.png \
+	assets/flandre/wing2.png \
+	assets/flandre/wing3.png \
+	assets/flandre/ribbon.png \
 	assets/background.png \
 	assets/fire1.png \
 	assets/fire2.png \

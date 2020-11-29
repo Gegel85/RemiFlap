@@ -1,3 +1,4 @@
+SECTION "Music", ROMX[$6CDD], BANK[1]
 include "src/sound/un_owen_was_her/channel1.asm"
 include "src/sound/un_owen_was_her/channel2.asm"
 include "src/sound/un_owen_was_her/channel3.asm"

@@ -87,6 +87,7 @@ projectiles::
 	ds $8 * 8
 gotHit::
 	ds $1
+endBossRegisters::
 
 SECTION "AUDIO_REGISTERS_MIRROR", WRAM0[$C410]
 Channel1Mirror::

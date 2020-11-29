@@ -1,4 +1,4 @@
-SECTION "Text", ROMX[$7D00], BANK[1]
+SECTION "Text", ROMX[$7F00], BANK[1]
 
 crashText::
 	db "FATAL\{PC at 0x38"

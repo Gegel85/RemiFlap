@@ -63,7 +63,7 @@ rumiaAttack1::
 	dec a
 	jr z, .prepareComeBack
 	dec a
-	jr z, .comeBack
+	jp z, .comeBack
 
 	ld hl, bossAnimationRegisters
 	ld a, [hl]
@@ -82,7 +82,7 @@ rumiaAttack1::
 	jr nc, .startWandering
 .fine::
 	ld [rumiaTotalMoveY], a
-	jr .endAnimation
+	jp endBossAnimation
 
 .wander::
 	ld hl, rumiaTotalMoveY
@@ -93,22 +93,25 @@ rumiaAttack1::
 	inc [hl]
 	push af
 	ld de, $FE00
+	ld b, $C
 	call moveBoss
 	pop af
 	ret nz
-	jr .endAnimation
+	jp endBossAnimation
 .add::
 	dec [hl]
 	dec [hl]
 	push af
 	ld de, $0200
+	ld b, $C
 	call moveBoss
 	pop af
 	ret nz
-	jr .endAnimation
+	jp endBossAnimation
 
 .rush::
 	ld de, $00FC
+	ld b, $C
 	call moveBoss
 	ld a, [bossPos + 1]
 	ld b, a
@@ -132,34 +135,30 @@ rumiaAttack1::
 	ret z
 	cp $D0
 	ret nc
-	jr .endAnimation
+	jp endBossAnimation
 .prepareComeBack::
 	ld a, $4B
 	ld [bossPos], a
 	ld a, 160
 	ld [bossPos + 1], a
 	call displayBoss
-	jr .endAnimation
+	jp endBossAnimation
 .comeBack::
 	ld de, $00FE
+	ld b, $C
 	call moveBoss
 	ld a, [bossPos + 1]
 	cp 120
 	ret nz
-	jr .endAnimation
+	jp endBossAnimation
 .chargeMist::
 	ld hl, bossAnimationRegisters
 	ld a, [hl]
 	or a
-	jr z, .endAnimation
+	jp z, endBossAnimation
 
 	dec [hl]
 	jp animateRumia
-.endAnimation::
-	xor a
-	ld [bossAnimationRegisters], a
-	ld hl, bossAttackAnimCounter
-	jr .nextAnimaton
 .startMistCharge::
 	push hl
 	ld hl, putMistSfx
@@ -167,46 +166,17 @@ rumiaAttack1::
 	ld a, $40
 	pop hl
 	ld [bossAnimationRegisters], a
-.nextAnimaton::
-	inc [hl]
-	ret
+	jp nextBossAnimation
 
 projectilesAngles::
 	dw $FF00, $0101
-	dw $FE00, $0201
+	dw $FF01, $0101
+	dw $FFFF, $0101
+	dw $FF00, $0101
 	dw $FE00, $0101
-	dw $FD00, $0201
-	dw $FD00, $0101
-	dw $FC00, $0201
-	dw $FC00, $0101
-	dw $FB00, $0201
-
-	dw $FE01, $0201
-	dw $FE01, $0101
-	dw $FEFF, $0201
-	dw $FEFF, $0101
-	dw $FD01, $0201
-	dw $FD01, $0101
-	dw $FDFF, $0201
-	dw $FDFF, $0101
-
-	dw $FE02, $0202
-	dw $FE02, $0102
-	dw $FEFE, $0202
-	dw $FEFE, $0102
-	dw $FD02, $0202
-	dw $FD02, $0102
-	dw $FDFE, $0202
-	dw $FDFE, $0102
-
-	dw $FE02, $0201
-	dw $FE02, $0101
-	dw $FEFE, $0201
-	dw $FEFE, $0101
-	dw $FD02, $0201
-	dw $FD02, $0101
-	dw $FDFE, $0201
-	dw $FDFE, $0101
+	dw $FF01, $0102
+	dw $FFFF, $0102
+	dw $FE00, $0201
 
 putMistSfx::
 	db 3		      ; Channel (0-3)
@@ -243,7 +213,7 @@ rumiaAttack2::
 	ld a, [nbOfProjectiles]
 	or a
 	jr nz, .updateProjectiles
-	jp rumiaAttack1.endAnimation
+	jp endBossAnimation
 
 .check::
 	inc hl
@@ -275,7 +245,7 @@ rumiaAttack2::
 	add hl, bc
 
 	call random
-	and %01111100
+	and %00011100
 	push hl
 	ld c, a
 	ld hl, projectilesAngles
@@ -393,10 +363,10 @@ rumiaAttack2::
 	ret z
 
 .noDelete::
-	ld a, $20
+	ld a, $1C
 	cp c
 	jr nc, .noCollision
-	ld a, $28
+	ld a, $24
 	cp c
 	jr c, .noCollision
 	ld a, [playerPos]
@@ -467,7 +437,7 @@ rumiaAttack2::
 	and $7
 	inc a
 	ld [shootCounter], a
-	jp rumiaAttack1.endAnimation
+	jp endBossAnimation
 
 bossFightRumia::
 	ld hl, bossAttackCounter
@@ -508,4 +478,5 @@ bossFightRumia::
 	xor a
 	ld [hli], a
 	ld [hli], a
+	ld [nbOfProjectiles], a
 	ret

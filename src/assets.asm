@@ -57,6 +57,21 @@ flandre::
 	incbin "assets/flandre/laevateinn1.cfx"
 	ds $10
 	incbin "assets/flandre/wing1.cfx"
+
+flanLookDown::
+	incbin "assets/flandre/flandre3.cfx"
+	incbin "assets/flandre/hair_wings3.cfx"
+	incbin "assets/flandre/wing2.cfx"
+	incbin "assets/flandre/ribbon.cfx"
+	incbin "assets/flandre/laevateinn7.cfx"
+
+flanLookUp::
+	incbin "assets/flandre/flandre4.cfx"
+	incbin "assets/flandre/hair_wings4.cfx"
+	incbin "assets/flandre/wing3.cfx"
+	incbin "assets/flandre/ribbon.cfx"
+	incbin "assets/flandre/laevateinn7.cfx"
+
 altFlanPos::
 	incbin "assets/flandre/flandre2.cfx"
 	incbin "assets/flandre/hair_wings2.cfx"
@@ -66,6 +81,7 @@ altLaevateinns::
 	incbin "assets/flandre/laevateinn3.cfx"
 	incbin "assets/flandre/laevateinn4.cfx"
 	incbin "assets/flandre/laevateinn5.cfx"
+biggestAltLaevateinns::
 	incbin "assets/flandre/laevateinn6.cfx"
 
 font::

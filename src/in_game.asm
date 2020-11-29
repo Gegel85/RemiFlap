@@ -17,6 +17,7 @@ game::
 
 	;reset currentStage
 	reg currentStage, 1
+
 	ld a, [fireColumnHoleSize]
 	dec a
 	ld [bossHpDrainCounterMax], a
@@ -109,7 +110,7 @@ initGame::
 include "src/stageStartAnimation.asm"
 
 	reg VBLANKRegister, 1
-;	jp bossFight
+	jp bossFight
 gameLoop::
 	reset interruptFlag
 	ld hl, VBLANKRegister
@@ -263,23 +264,36 @@ gameLoop::
 	jp gameLoop
 
 
-bossFightFlandre::
+endBossAnimation::
+	xor a
+	ld [bossAnimationRegisters], a
+	ld hl, bossAttackAnimCounter
+nextBossAnimation::
+	inc [hl]
 	ret
 
 include "src/boss_fights/rumia.asm"
+include "src/boss_fights/flandre.asm"
 
 bossFightCallbacks::
 	dw bossFightRumia
 	dw bossFightFlandre
 
 bossFight::
+	ld de, bossAttackCounter
+	xor a
+	ld bc, endBossRegisters - bossAttackCounter
+	call fillMemory
+
+	ld [VBLANKRegister], a
+	ld [bossAnimationRegisters], a
+	ld [bossAnimationRegisters + 1], a
 	reg bossPos, 70
 	reg bossPos + 1, 160
 	reg bossAttack, -1
 	reg bossAttackCounter, 1
 	reg bossHp, $FF
 	call displayBoss
-	reset bossAnimationRegisters
 	ld hl, bossHpDrainCounterMax
 	ld a, [hl]
 	inc a
@@ -298,6 +312,22 @@ bossFight::
 	ld h, [hl]
 	ld l, a
 	push hl
+
+	reset interruptFlag
+	ld hl, VBLANKRegister
+.loop::
+	halt
+	bit 7, [hl]
+
+	jr z, .loop
+	res 7, [hl]
+	ld a, 1
+	ld [VRAMBankSelect], a
+	startGPDMA VRAMBg1Mirror, VRAMBgStart, $240
+
+	xor a
+	ld [VRAMBankSelect], a
+	startGPDMA VRAMBgMirror, VRAMBgStart, $240
 
 bossFightLoop::
 	reset interruptFlag

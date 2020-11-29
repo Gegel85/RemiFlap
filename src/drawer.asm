@@ -329,6 +329,7 @@ stageAnimationRumia::
 	ld [hl], a
 	ld d, a
 	ld e, $FE
+	ld b, $C
 	jp moveBoss
 
 .goAway::
@@ -337,6 +338,7 @@ stageAnimationRumia::
 	jr z, .hideBoss
 
 	ld de, $0002
+	ld b, $C
 	jp moveBoss
 .hideBoss::
 	ld de, oamSrc + $1C
@@ -406,6 +408,7 @@ stageAnimationFlandre::
 
 .goAway::
 	ld de, $0004
+	ld b, $C
 	call moveBoss
 	ld a, [bossPos + 1]
 	cp 160
@@ -440,7 +443,7 @@ stageAnimationFlandre::
 	inc [hl]
 	inc hl
 	ld [hl], $10
-	startGPDMA altFlanPos, $8220, 7 * $10
+	startHDMA altFlanPos, $8220, 7 * $10
 	ld hl, flanPos2
 	ld de, oamSrc + $3C
 	ld a, [bossPos]
@@ -480,6 +483,7 @@ stageAnimationFlandre::
 
 .arrive::
 	ld de, $01FE
+	ld b, $C
 	call moveBoss
 	ld a, [bossPos + 1]
 	cp 120
@@ -524,7 +528,6 @@ moveBoss::
 	add e
 	ld [hli], a
 	ld hl, oamSrc + $1C
-	ld b, $C
 .loop:
 	ld a, [hl]
 	add d
