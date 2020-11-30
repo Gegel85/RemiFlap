@@ -55,7 +55,7 @@ flandre::
 	incbin "assets/flandre/flandre1.cfx"
 	incbin "assets/flandre/hair_wings1.cfx"
 	incbin "assets/flandre/laevateinn1.cfx"
-	ds $10
+	incbin "assets/flandre/bullet.cfx"
 	incbin "assets/flandre/wing1.cfx"
 
 flanLookDown::
@@ -75,6 +75,7 @@ flanLookUp::
 altFlanPos::
 	incbin "assets/flandre/flandre2.cfx"
 	incbin "assets/flandre/hair_wings2.cfx"
+	incbin "assets/flandre/laevateinn2.cfx"
 
 altLaevateinns::
 	incbin "assets/flandre/laevateinn2.cfx"

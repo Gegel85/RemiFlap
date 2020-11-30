@@ -13,7 +13,15 @@ gameOver::
 	jp z, .initGame
 	bit B_BIT, a
 	jp z, mainMenu
+	ld a, [currentStage]
+	bit 0, a
+	jr z, .mainLoop
+	ld a, [bossAttack]
+	cp 3
+	call z, flandreAttackFourOfAKind.displayElements
 	jr .mainLoop
+
 .initGame:
 	reset currentStage
+	ld [bossHpDrainCounterMax], a
 	jp initGame

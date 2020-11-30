@@ -15,8 +15,8 @@ game::
 	reset ROMBankSelect
 	startGPDMA remiliaSprite, VRAMStart, $200
 
-	;reset currentStage
-	reg currentStage, 1
+	reset currentStage
+	;reg currentStage, 1
 
 	ld a, [fireColumnHoleSize]
 	dec a
@@ -70,19 +70,24 @@ initGame::
 
 	ld c, 0
 	ld a, [currentStage]
-	sla a
-	rl c
-	sla a
-	rl c
-	sla a
-	rl c
-	sla a
-	rl c
-
-	add $20
-	ld [score], a
+	inc a
+	ld d, a
+	ld b, 5
+.makeScoreLoop::
+	ld a, b
+	add 5
+	daa
+	ld b, a
 	ld a, c
 	adc 0
+	daa
+	ld c, a
+	dec d
+	jr nz, .makeScoreLoop
+
+	ld a, b
+	ld [score], a
+	ld a, c
 	ld [score + 1], a
 	call copyBgTilemap
 
@@ -110,7 +115,7 @@ initGame::
 include "src/stageStartAnimation.asm"
 
 	reg VBLANKRegister, 1
-	jp bossFight
+;	jp bossFight
 gameLoop::
 	reset interruptFlag
 	ld hl, VBLANKRegister
@@ -410,5 +415,8 @@ bossFightLoop::
 .finish::
 	pop hl
 	ld hl, currentStage
-	inc [hl]
+	ld a, [hl]
+	add 1
+	daa
+	ld [hl], a
 	jp initGame

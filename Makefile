@@ -73,6 +73,7 @@ COLORED_IMGS = \
 	assets/flandre/wing2.png \
 	assets/flandre/wing3.png \
 	assets/flandre/ribbon.png \
+	assets/flandre/bullet.png \
 	assets/background.png \
 	assets/fire1.png \
 	assets/fire2.png \

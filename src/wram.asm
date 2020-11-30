@@ -84,8 +84,16 @@ nbOfProjectiles::
 shootCounter::
 	ds $1
 projectiles::
-	ds $8 * 8
+	; SPEED (2)
+	; COUNTER (2)
+	; MAX COUNTER (2)
+	; POS (2)
+	ds $8 * 32
 gotHit::
+	ds $1
+flandreClones::
+	ds $2 * 3
+displayRegister::
 	ds $1
 endBossRegisters::
 

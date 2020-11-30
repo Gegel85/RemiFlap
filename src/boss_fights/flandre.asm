@@ -6,7 +6,7 @@ flandreEnteringScene::
 	inc [hl]
 	startHDMA flandre, $8200, $100
 .noSpriteCopy::
-	ld de, $01FE
+	ld de, $00FE
 	ld b, $C
 	call moveBoss
 	ld a, [bossPos + 1]
@@ -434,10 +434,399 @@ flandreAttackLaeveteinnDown::
 	jr nz, .loop
 	ret
 
+flandreSpriteTable::
+	db $10, $08, $20, $04
+	db $10, $10, $21, $04
+	db $18, $08, $22, $04
+	db $18, $10, $23, $04
+	db $20, $08, $24, $04
+	db $20, $10, $25, $04
+	db $18, $0E, $26, $05
+	db $1C, $16, $29, $07
+	db $13, $08, $27, $07
+	db $1B, $08, $28, $07
+
+flandreProjectilesTable::
+	dw $0101
+	dw $FFFF
+	dw $FF01
+	dw $01FF
+	dw $0200
+	dw $FE00
+	dw $0002
+	dw $00FE
 
 flandreAttackFourOfAKind::
-	startHDMA flandre, $8200, $100
+	ld hl, bossAttackAnimCounter
+	xor a
+	or [hl]
+	jr z, .spawnClones
+	dec a
+	jp z, .moveClones
+	dec a
+	jr z, .spawnProjectiles
+	dec a
+	jp z, .checkProjectiles
+	dec a
+	jr z, .moveClonesBack
+
+	xor a
+	ld de, oamSrc + $1C
+	ld bc, $48
+	call fillMemory
+	call displayBoss
 	jp bossFightFlandre.endOfAttack
+.checkProjectiles::
+	ld a, [nbOfProjectiles]
+	or a
+	jp nz, .updateProjectiles
+	inc [hl]
+	jp .updateProjectiles
+.spawnProjectiles::
+	inc [hl]
+	ld de, bossPos
+	ld hl, nbOfProjectiles
+	ld a, 32
+	ld [hli], a
+	inc hl
+	call .spawnProjectilesBatch
+	ld de, flandreClones
+	call .spawnProjectilesBatch
+	ld de, flandreClones + 2
+	call .spawnProjectilesBatch
+	ld de, flandreClones + 4
+.spawnProjectilesBatch::
+	reg $FFF0, 8
+	ld bc, flandreProjectilesTable
+.spawnProjectilesLoop::
+	; SPEED (2)
+	ld a, [bc]
+	inc bc
+	ld [hli], a
+	ld a, [bc]
+	inc bc
+	ld [hli], a
+	; COUNTER (2)
+	ld a, 1
+	ld [hli], a
+	ld [hli], a
+	; MAX COUNTER (2)
+	ld [hli], a
+	ld [hli], a
+	; POS (2)
+	ld a, [de]
+	inc de
+	add $10
+	ld [hli], a
+	ld a, [de]
+	dec de
+	add $8
+	ld [hli], a
+	ld a, [$FFF0]
+	dec a
+	ret z
+	ld [$FFF0], a
+	jr .spawnProjectilesLoop
+.spawnClones::
+	inc [hl]
+	ld a, [bossPos]
+	ld b, a
+	ld a, [bossPos + 1]
+	ld c, a
+	ld hl, flandreClones
+	ld d, 3
+.spawnLoop::
+	ld a, b
+	ld [hli], a
+	ld a, c
+	ld [hli], a
+	dec d
+	jr nz, .spawnLoop
+	jp .displayElements
+.moveClonesBack::
+	ld hl, bossAnimationRegisters
+	inc [hl]
+	ld a, $18
+	cp [hl]
+	jr nz, .noEndBack
+	xor a
+	ld [hl], a
+	ld hl, bossAttackAnimCounter
+	inc [hl]
+	ret
+.noEndBack::
+	ld hl, bossPos
+	dec [hl]
+	ld hl, flandreClones
+
+	inc [hl]
+	inc hl
+	inc hl
+
+	inc [hl]
+	inc [hl]
+	inc hl
+	inc [hl]
+	inc hl
+
+	dec [hl]
+	dec [hl]
+	inc hl
+	inc [hl]
+	inc hl
+	jp .displayElements
+.moveClones::
+	ld hl, bossAnimationRegisters
+	inc [hl]
+	ld a, $18
+	cp [hl]
+	jr nz, .noEnd
+	xor a
+	ld [hl], a
+	ld hl, bossAttackAnimCounter
+	inc [hl]
+	ret
+.noEnd::
+	ld hl, bossPos
+	inc [hl]
+	ld hl, flandreClones
+
+	dec [hl]
+	inc hl
+	inc hl
+
+	dec [hl]
+	dec [hl]
+	inc hl
+	dec [hl]
+	inc hl
+
+	inc [hl]
+	inc [hl]
+	inc hl
+	dec [hl]
+	inc hl
+	jr .displayElements
+
+.updateProjectiles::
+	ld a, [nbOfProjectiles]
+	or a
+	jr z, .displayElements
+	ld d, a
+	ld hl, projectiles
+.updateLoop::
+	; SPEED
+	ld a, [hli]
+	ld b, a
+	ld a, [hli]
+	ld c, a
+
+	; COUNTER
+	dec [hl]
+	inc hl
+	jr z, .noDecY
+	dec b
+	jr .checkX
+.noDecY::
+	inc hl
+	ld a, [hld]
+	dec hl
+	ld [hli], a
+.checkX::
+	dec [hl]
+	inc hl
+	jr z, .noDecX
+	dec c
+	jr .applySpeed
+.noDecX::
+	inc hl
+	ld a, [hld]
+	dec hl
+	ld [hli], a
+.applySpeed::
+	inc hl
+	inc hl
+	ld a, b
+	add [hl]
+	ld b, a
+	ld [hli], a
+	ld a, c
+	add [hl]
+	ld c, a
+	ld [hli], a
+
+	ld a, 144
+	cp b
+	jr c, .delete
+	ld a, 160
+	cp c
+	jr nc, .noDelete
+
+.delete::
+	ld a, [nbOfProjectiles]
+	dec a
+	push af
+	ld [nbOfProjectiles], a
+
+	ld a, d
+	dec a
+	push de
+	sla a
+	sla a
+	sla a
+	ld b, 0
+	ld c, a
+	push hl
+	ld de, -8
+	add hl, de
+	ld d, h
+	ld e, l
+	pop hl
+	push de
+	call copyMemory
+	pop hl
+	pop de
+	pop af
+	ret z
+
+.noDelete::
+	ld a, $1C
+	cp c
+	jr nc, .noCollision
+	ld a, $24
+	cp c
+	jr c, .noCollision
+	ld a, [playerPos]
+	sub b
+	bit 7, a
+	jr .pos
+	cpl
+	inc a
+.pos::
+	cp 4
+	jr nc, .noCollision
+	reg gotHit, 1
+
+.noCollision::
+	dec d
+	jr nz, .updateLoop
+.displayElements::
+	ld hl, displayRegister
+	ld a, [hl]
+	xor 1
+	ld [hl], a
+	bit 0, a
+	jr z, .displayFlandreAndClone1
+
+.displayClone2AndClone3::
+	ld hl, oamSrc + $1C
+	ld bc, flandreClones + 2
+	call .displaySingleBoss
+	ld bc, flandreClones + 4
+	call .displaySingleBoss
+	jr .displayProjectiles
+.displayFlandreAndClone1::
+	ld hl, oamSrc + $1C
+	ld bc, flandreClones
+	call .displaySingleBoss
+	ld bc, bossPos
+	call .displaySingleBoss
+.displayProjectiles::
+	xor a
+	ld de, oamSrc + $64
+	ld bc, $3C
+	call fillMemory
+	ld a, [nbOfProjectiles]
+	ld b, a
+	or a
+	ret z
+	ld hl, oamSrc + $64
+	ld de, projectiles
+	ld a, [displayRegister]
+	bit 0, a
+	jr nz, .display
+	ld de, projectiles + $78
+	ld a, b
+	sub $F
+	ld b, a
+	ret c
+	ret z
+.display::
+	ld a, $F
+	cp b
+	jr nc, .displayLoop
+	ld b, $F
+.displayLoop::
+	; SPEED
+	inc de
+	inc de
+	; COUNTER
+	inc de
+	inc de
+	; MAX COUNTER
+	inc de
+	inc de
+	; POS
+	ld a, [de]
+	inc de
+	add $C
+	ld [hli], a
+
+	ld a, [de]
+	inc de
+	add 4
+	ld [hli], a
+
+	ld a, $28
+	ld [hli], a
+	ld a, 6
+	ld [hli], a
+	dec b
+	jr nz, .displayLoop
+	ld a, [gotHit]
+	or a
+	ld a, 0
+	ld [gotHit], a
+	jp nz, gameOver
+	ret
+
+.displaySingleBoss::
+	reg $FFF0, 9
+	ld de, bossesSprites + $40
+.loop::
+	push bc
+	ld a, [bc]
+	inc bc
+	push bc
+	ld b, a
+	ld a, [de]
+	inc de
+	add b
+	ld [hli], a
+	pop bc
+
+	ld a, [bc]
+	inc bc
+	ld b, a
+	ld a, [de]
+	inc de
+	add b
+	ld [hli], a
+
+	ld a, [de]
+	inc de
+	ld [hli], a
+
+	ld a, [de]
+	inc de
+	ld [hli], a
+
+	ld a, [$FFF0]
+	dec a
+	pop bc
+	ret z
+	ld [$FFF0], a
+	jr .loop
 
 
 bossFightFlandre::
