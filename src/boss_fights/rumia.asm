@@ -61,7 +61,7 @@ rumiaAttack1::
 	dec a
 	jr z, .rush
 	dec a
-	jr z, .prepareComeBack
+	jp z, .prepareComeBack
 	dec a
 	jp z, .comeBack
 
@@ -130,11 +130,10 @@ rumiaAttack1::
 	jp nc, gameOver
 
 .noCollision::
-	ld a, b
-	bit 7, a
-	ret z
+	ld a, [bossPos + 1]
+	add $18
 	cp $D0
-	ret nc
+	ret c
 	jp endBossAnimation
 .prepareComeBack::
 	ld a, $4B
