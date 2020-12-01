@@ -155,6 +155,34 @@ initGame::
 	push bc
 	reset VBLANKRegister
 
+	reg VRAMBankSelect, 1
+	ld b, $10
+	ld de, $20
+	ld hl, VRAMWinStart
+	ld a, 5
+.makeLifeBarGreen::
+	ld [hl], a
+	add hl, de
+	dec b
+	jr nz, .makeLifeBarGreen
+
+	reset VRAMBankSelect
+	ld b, $10
+	ld de, $20
+	ld hl, VRAMWinStart
+	ld a, $90
+.makeLifeBar::
+	ld [hl], a
+	add hl, de
+	dec b
+	jr nz, .makeLifeBar
+
+	ld hl, cgbBgPalIndex
+	ld a, $A8
+	ld [hli], a
+	ld [hl], $E0
+	ld [hl], $03
+
 include "src/stageStartAnimation.asm"
 
 	reg VBLANKRegister, 1
@@ -361,6 +389,11 @@ bossFight::
 	ld l, a
 	push hl
 
+	ld hl, lcdCtrl
+	set 5, [hl]
+	reg winPosXMinus7, 163
+	reg winPosY, 16
+
 	reset interruptFlag
 	ld hl, VBLANKRegister
 .loop::
@@ -389,6 +422,30 @@ bossFightLoop::
 	ld hl, bgScrollX
 	inc [hl]
 
+	ld a, [bossHp]
+	ld b, a
+	ld a, 144
+	srl b
+	sub b
+	ld [winPosY], a
+	ld a, b
+	and %01111000
+	jr nz, .notRed
+	ld a, $A8
+	ld hl, cgbBgPalIndex
+	ld [hli], a
+	ld [hl], $1F
+	ld [hl], $00
+	jr .next
+.notRed::
+	bit 6, b
+	jr nz, .next
+	ld a, $A8
+	ld hl, cgbBgPalIndex
+	ld [hli], a
+	ld [hl], $FF
+	ld [hl], $03
+.next::
 	ld hl, playerSpeed
 	ld a, [hl]
 	pop de
