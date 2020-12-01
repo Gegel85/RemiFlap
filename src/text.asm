@@ -11,9 +11,11 @@ startText::
 	db "Press  START"
 
 difficulties::
+	db " Hell   "
 	db " Hard   "
 	db "Normal  "
 	db " Easy   "
+	db " Baby   "
 
 stageText::
 	db "Stage "

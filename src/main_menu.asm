@@ -72,7 +72,7 @@ mainMenu::
 	ld a, [fireColumnHoleSize]
 	or a
 	jr nz, .next
-	ld a, 4
+	ld a, 5
 	ld [fireColumnHoleSize], a
 .next::
 	call updateDifficultyIndicator
@@ -94,11 +94,6 @@ mainMenu::
 	call startMusic
 
 	ei
-	ld a, [fireColumnHoleSize]
-	or a
-	jr nz, .loop
-	ld a, 4
-	ld [fireColumnHoleSize], a
 .loop::
 	reset interruptFlag
 	ld hl, mainMenuArrowAnimationCounter

@@ -14,6 +14,7 @@ game::
 	ld bc, 20
 	call copyMemory
 
+	reset nbOfProjectiles
 	reg bossHpDrainCounterMax, 2
 	reg VRAMBankSelect, 1
 	inc a
