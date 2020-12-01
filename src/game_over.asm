@@ -13,15 +13,23 @@ gameOver::
 	jp z, .initGame
 	bit B_BIT, a
 	jp z, mainMenu
+	ld a, [bossHp]
+	or a
+	jr z, .mainLoop
 	ld a, [currentStage]
 	bit 0, a
-	jr z, .mainLoop
+	jr z, .rumia
 	ld a, [bossAttack]
 	cp 3
 	call z, flandreAttackFourOfAKind.displayElements
 	jr .mainLoop
+.rumia::
+	ld a, [bossAttack]
+	cp 2
+	call z, rumiaAttack2.drawProjectiles
+	jr .mainLoop
 
 .initGame:
 	reset currentStage
-	ld [bossHpDrainCounterMax], a
+	reg bossHpDrainCounterMax, 2
 	jp initGame

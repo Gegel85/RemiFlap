@@ -3,6 +3,7 @@ game::
 	call waitVBLANK
 	reset lcdCtrl
 
+	reg bossHpDrainCounterMax, 2
 	reg VRAMBankSelect, 1
 	inc a
 	ld [ROMBankSelect], a
@@ -16,7 +17,6 @@ game::
 	startGPDMA remiliaSprite, VRAMStart, $200
 
 	reset currentStage
-	;reg currentStage, 1
 
 	ld a, [fireColumnHoleSize]
 	dec a

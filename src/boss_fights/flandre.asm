@@ -456,6 +456,15 @@ flandreProjectilesTable::
 	dw $0002
 	dw $00FE
 
+flandreShootProjectileBatchSfx::
+	db 3		      ; Channel (0-3)
+	db $FF		      ; Sound duration in frames
+	db $3A, $A3, $88, $80 ; Registers data
+flandreFireSfx::
+	db 3		      ; Channel (0-3)
+	db 60		      ; Sound duration in frames
+	db $3A, $8F, $8A, $80 ; Registers data
+
 flandreAttackFourOfAKind::
 	ld hl, bossAttackAnimCounter
 	xor a
@@ -484,6 +493,8 @@ flandreAttackFourOfAKind::
 	jp .updateProjectiles
 .spawnProjectiles::
 	inc [hl]
+	ld hl, flandreShootProjectileBatchSfx
+	call playSfx
 	ld de, bossPos
 	ld hl, nbOfProjectiles
 	ld a, 32

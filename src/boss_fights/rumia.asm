@@ -170,13 +170,10 @@ rumiaAttack1::
 
 projectilesAngles::
 	dw $FF00, $0101
-	dw $FF01, $0101
-	dw $FFFF, $0101
-	dw $FF00, $0101
-	dw $FE00, $0101
+	dw $FF01, $0103
 	dw $FF01, $0102
+	dw $FFFF, $0103
 	dw $FFFF, $0102
-	dw $FE00, $0201
 
 putMistSfx::
 	db 3		      ; Channel (0-3)
@@ -186,10 +183,6 @@ takeMistSfx::
 	db 3		      ; Channel (0-3)
 	db $20		      ; Sound duration in frames
 	db $3F, $F3, $50, $80 ; Sound data copied in channel registers
-shootSfx::
-	db 3		      ; Channel (0-3)
-	db $20		      ; Sound duration in frames
-	db $38, $F1, $78, $80 ; Sound data copied in channel registers
 
 rumiaAttack2::
 	xor a
@@ -213,12 +206,17 @@ rumiaAttack2::
 	ld a, [nbOfProjectiles]
 	or a
 	jr nz, .updateProjectiles
+
+     	ld de, oamSrc + $60
+     	ld bc, $40
+     	call fillMemory
 	jp endBossAnimation
 
 .check::
 	inc hl
-	bit 3, [hl]
-	jr nz, .updateProjectiles
+	ld a, 32 - 5
+	cp [hl]
+	jr c, .updateProjectiles
 
 	inc hl
 	dec [hl]
@@ -230,12 +228,13 @@ rumiaAttack2::
 	ld [nbOfProjectilesToShoot], a
 
 	call random
-	and $7
-	set 3, a
+	and %00000111
+	set 4, a
 	ld [hld], a
 	ld a, [hl]
-	inc [hl]
-	inc hl
+	add 5
+	ld [hli], a
+	sub 5
 	inc hl
 	sla a
 	sla a
@@ -244,32 +243,25 @@ rumiaAttack2::
 	ld c, a
 	add hl, bc
 
-	call random
-	and %00011100
-	push hl
-	ld c, a
-	ld hl, projectilesAngles
-	add hl, bc
-	ld b, h
-	ld c, l
-	pop hl
+	ld bc, projectilesAngles
+	ld d, 5
+.spawnLoop::
 	ld a, [bc]
 	inc bc
 	ld [hli], a
 	ld a, [bc]
 	inc bc
-	ld [hli], a
-	ld a, [bc]
-	inc bc
-	ld d, a
 	ld [hli], a
 	ld a, [bc]
 	inc bc
 	ld e, a
 	ld [hli], a
-	ld a, d
+	ld a, [bc]
 	ld [hli], a
 	ld a, e
+	ld [hli], a
+	ld a, [bc]
+	inc bc
 	ld [hli], a
 	ld a, [bossPos]
 	add $C
@@ -277,8 +269,10 @@ rumiaAttack2::
 	ld a, [bossPos + 1]
 	add $C
 	ld [hli], a
+	dec d
+	jr nz, .spawnLoop
 
-	ld hl, shootSfx
+	ld hl, flandreShootProjectileBatchSfx
 	call playSfx
 
 .updateProjectiles::
@@ -298,7 +292,12 @@ rumiaAttack2::
 	dec [hl]
 	inc hl
 	jr z, .noDecY
+	bit 7, b
+	jr nz, .incY
 	dec b
+	jr .checkX
+.incY::
+	inc b
 	jr .checkX
 .noDecY::
 	inc hl
@@ -309,7 +308,12 @@ rumiaAttack2::
 	dec [hl]
 	inc hl
 	jr z, .noDecX
+	bit 7, c
+	jr nz, .incX
 	dec c
+	jr .applySpeed
+.incX::
+	inc c
 	jr .applySpeed
 .noDecX::
 	inc hl
@@ -385,41 +389,61 @@ rumiaAttack2::
 	jr nz, .updateLoop
 
 .drawProjectiles::
-	xor a
-	ld de, oamSrc + $80
-	ld bc, $20
-	call fillMemory
-	ld a, [nbOfProjectiles]
-	ld b, a
-	ld hl, oamSrc + $80
-	ld de, projectiles
+	ld hl, displayRegister
+	ld a, [hl]
+	xor 1
+	ld [hl], a
+     	xor a
+     	ld de, oamSrc + $60
+     	ld bc, $40
+     	call fillMemory
+     	ld a, [nbOfProjectiles]
+     	ld b, a
+     	or a
+     	ret z
+     	ld hl, oamSrc + $60
+     	ld de, projectiles
+     	ld a, [displayRegister]
+     	bit 0, a
+     	jr nz, .display
+     	ld de, projectiles + $80
+     	ld a, b
+     	sub $10
+     	ld b, a
+     	ret c
+     	ret z
+.display::
+     	ld a, $F
+     	cp b
+     	jr nc, .displayLoop
+     	ld b, $F
 .displayLoop::
-	; SPEED
-	inc de
-	inc de
-	; COUNTER
-	inc de
-	inc de
-	; MAX COUNTER
-	inc de
-	inc de
-	; POS
-	ld a, [de]
-	inc de
-	add $C
-	ld [hli], a
+     	; SPEED
+     	inc de
+     	inc de
+     	; COUNTER
+     	inc de
+     	inc de
+     	; MAX COUNTER
+     	inc de
+     	inc de
+     	; POS
+     	ld a, [de]
+     	inc de
+     	add $C
+     	ld [hli], a
 
-	ld a, [de]
-	inc de
-	add 4
-	ld [hli], a
+     	ld a, [de]
+     	inc de
+     	add 4
+     	ld [hli], a
 
-	ld a, $27
-	ld [hli], a
-	ld a, 6
-	ld [hli], a
-	dec b
-	jr nz, .displayLoop
+     	ld a, $27
+     	ld [hli], a
+     	ld a, 6
+     	ld [hli], a
+     	dec b
+     	jr nz, .displayLoop
 	ld a, [gotHit]
 	or a
 	ld a, 0
