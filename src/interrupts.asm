@@ -85,6 +85,36 @@ vblank_interrupt::
 ;    de -> Preserved
 ;    hl -> Preserved
 hblank_interrupt::
+	push af
+	pop af
+	push af
+	pop af
+	push af
+	pop af
+	push af
+	pop af
+	push af
+	pop af
+	push af
+	pop af
+	push af
+	ld a, [$FFF0]
+	or a
+	jr z, .other
+	ld a, [scrollBackup]
+	ld [bgScrollX], a
+	xor a
+	ld [bgScrollY], a
+	jr .end
+.other::
+	ld [bgScrollX], a
+	ld a, 84
+	ld [bgScrollY], a
+	ld [$FFF0], a
+.end::
+	ld a, [lines + 1]
+	ld [lcdLineCmp], a
+	pop af
 	reti
 
 ; Timer interrupt handler
@@ -103,6 +133,7 @@ timer_interrupt::
 	push de
 	push hl
 	ld hl, playingMusics
+	ei
 	call updateMusics
 	pop hl
 	pop de

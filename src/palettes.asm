@@ -15,6 +15,8 @@ firePal::
 	dw $1CE7, $00C7, $0067, $0007
 mainMenuBgPal::
 	incbin "assets/main_menu.pal"
+monochromePal::
+	dw $7FFF, $2108, $4210, $0000
 
 rumiaPal::
 	incbin "assets/rumia/rumia.pal"

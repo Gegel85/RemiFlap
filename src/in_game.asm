@@ -3,12 +3,28 @@ game::
 	call waitVBLANK
 	reset lcdCtrl
 
+	ld hl, gameOverText
+	ld de, $9A40
+	ld bc, 20
+	call copyMemory
+	ld de, $9A60
+	ld bc, 20
+	call copyMemory
+	ld de, $9A80
+	ld bc, 20
+	call copyMemory
+
 	reg bossHpDrainCounterMax, 2
 	reg VRAMBankSelect, 1
 	inc a
 	ld [ROMBankSelect], a
 	startGPDMA background, VRAMStart + $1000, $800
 	startGPDMA background + $800, VRAMStart + $800, $800
+
+	ld a, 4
+	ld de, $9A40
+	ld bc, $60
+	call fillMemory
 
 	reset VRAMBankSelect
 	startGPDMA background + $1000, VRAMStart + $1000, mainMenuBg - background - $1000
@@ -36,6 +52,20 @@ game::
 	ld bc, 8 * 30
 	call uncompress
 
+	xor a
+	ld de, VRAMStart + "A" * $10 + $800
+	ld hl, font
+	ld bc, 8 * 26
+	call uncompress
+
+	ld de, VRAMStart + "0" * $10 + $800
+	ld bc, 8 * 10
+	call uncompress
+
+	ld de, VRAMStart + "a" * $10 + $800
+	ld bc, 8 * 30
+	call uncompress
+
 	ld hl, cgbBgPalIndex
 	ld a, $80
 	ld [hli], a
@@ -47,6 +77,18 @@ game::
 	ld [hl], a
 	dec b
 	jr nz, .bgPalLoop
+
+	ld hl, cgbBgPalIndex
+	ld a, $A0
+	ld [hli], a
+	ld de, monochromePal
+	ld b, $8
+.bgPalLoop2::
+	ld a, [de]
+	inc de
+	ld [hl], a
+	dec b
+	jr nz, .bgPalLoop2
 
 	ld hl, cgbObjPalIndex
 	ld a, $80

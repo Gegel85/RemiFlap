@@ -93,9 +93,15 @@ gotHit::
 	ds $1
 flandreClones::
 	ds $2 * 3
+endBossRegisters::
 displayRegister::
 	ds $1
-endBossRegisters::
+lines::
+	ds $2
+scrollBackup::
+	ds $1
+lineTimer::
+	ds $1
 
 SECTION "AUDIO_REGISTERS_MIRROR", WRAM0[$C410]
 Channel1Mirror::
