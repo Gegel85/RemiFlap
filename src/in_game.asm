@@ -14,7 +14,6 @@ game::
 	ld bc, 20
 	call copyMemory
 
-	reset nbOfProjectiles
 	reg bossHpDrainCounterMax, 2
 	reg VRAMBankSelect, 1
 	inc a
@@ -107,10 +106,11 @@ initGame::
 	di
 	call waitVBLANK
 	reset lcdCtrl
-	reg playerPos, $55
-	reset playerSpeed
+	ld [playerSpeed], a
 	ld [bgScrollX], a
+	ld [nbOfProjectiles], a
 
+	reg playerPos, $55
 	ld c, 0
 	ld a, [currentStage]
 	inc a
