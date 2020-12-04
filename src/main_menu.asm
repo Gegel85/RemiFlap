@@ -18,6 +18,9 @@ mainMenu::
 
 	reg ROMBankSelect, 2
 	reset VRAMBankSelect
+	ld de, VRAMWinStart
+	ld bc, $400
+	call fillMemory
 	startGPDMA mainMenuBg, VRAMStart, noCGBScreen - mainMenuBg
 
 	reset ROMBankSelect
@@ -82,6 +85,7 @@ mainMenu::
 	ld hl, startText
 	call copyMemory
 
+	reg winPosXMinus7, 7
 	reg winPosY, 80
 
 	reg lcdCtrl, %11010001
